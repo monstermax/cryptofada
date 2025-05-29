@@ -13,6 +13,10 @@ export default function Testnets() {
     const [guides, setGuides] = useState<TestnetGuide[]>([])
     const [loading, setLoading] = useState(true)
 
+    const hasAirdrop = (blockchainSlug: string) => {
+        return false; // TODO: retourner true si la blockchain a un airdrop enregistré
+    }
+
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -83,8 +87,8 @@ export default function Testnets() {
                                                 style={{ backgroundColor: blockchain.color }}
                                             ></div>
                                             <div>
-                                                <h3>{guide.title}</h3>
-                                                <span className="blockchain-name">{blockchain.name}</span>
+                                                <h3>{blockchain.name}</h3>
+                                                <span className="blockchain-subtitle">{guide.title}</span>
                                             </div>
                                         </div>
                                     )}
@@ -152,16 +156,23 @@ export default function Testnets() {
 
                                 <div className="guide-actions">
                                     {blockchain && (
-                                        <Link
-                                            to={`/blockchain/${blockchain.slug}`}
-                                            className="action-btn primary"
-                                        >
-                                            Commencer le guide
-                                        </Link>
+                                        <>
+                                            <Link
+                                                to={`/blockchain/${blockchain.slug}`}
+                                                className="action-btn primary"
+                                            >
+                                                Explorer
+                                            </Link>
+
+                                            {hasAirdrop(blockchain.slug) && <>
+                                                <Link
+                                                    to={`/blockchain/${blockchain.slug}/airdrops`}
+                                                    className="action-btn secondary">
+                                                    Guide Airdrop
+                                                </Link>
+                                            </>}
+                                        </>
                                     )}
-                                    <button className="action-btn secondary">
-                                        Voir détails
-                                    </button>
                                 </div>
                             </div>
                         )

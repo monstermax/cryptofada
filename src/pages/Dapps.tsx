@@ -15,6 +15,10 @@ export default function Dapps() {
     const [selectedDifficulty, setSelectedDifficulty] = useState('Tous')
     const [selectedBlockchain, setSelectedBlockchain] = useState('Tous')
 
+    const hasAirdrop = (dappSlug: string) => {
+        return false; // TODO: retourner true si la blockchain a un airdrop enregistré
+    }
+
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -198,6 +202,9 @@ export default function Dapps() {
                                     <span className={`category-badge ${dapp.category.toLowerCase()}`}>
                                         {dapp.category}
                                     </span>
+                                    {hasAirdrop(dapp.slug) && <>
+                                        TODO: lien vers page airdrop de la dapp
+                                    </>}
                                     <span className={`difficulty-badge ${dapp.tutorial.difficulty.toLowerCase()}`}>
                                         {dapp.tutorial.difficulty}
                                     </span>
@@ -240,15 +247,27 @@ export default function Dapps() {
 
                         {/* Actions */}
                         <div className="tutorial-actions">
-                            <button className="action-btn primary">
-                                📺 Voir le tutoriel
-                            </button>
                             <Link
                                 to={`/dapps/${dapp.slug}`}
                                 className="action-btn secondary"
                             >
                                 ℹ️ Plus d'infos
                             </Link>
+
+                            <Link
+                                to={`/dapps/${dapp.slug}/tutos`}
+                                className="action-btn secondary"
+                            >
+                                📺 Voir le tutoriel
+                            </Link>
+
+                            {hasAirdrop(dapp.slug) && <>
+                                <Link
+                                    to={`/dapps/${dapp.slug}/airdrops`}
+                                    className="action-btn secondary">
+                                    Guide Airdrop
+                                </Link>
+                            </>}
                         </div>
                     </div>
                 ))}

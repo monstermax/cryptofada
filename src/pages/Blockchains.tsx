@@ -14,6 +14,10 @@ export default function Blockchains() {
     const [selectedPath, setSelectedPath] = useState('Tous')
     const [selectedDifficulty, setSelectedDifficulty] = useState('Tous')
 
+    const hasAirdrop = (blockchainSlug: string) => {
+        return false; // TODO: retourner true si la blockchain a un airdrop enregistré
+    }
+
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -40,7 +44,7 @@ export default function Blockchains() {
             prerequisites: getPrerequisites(blockchain.slug),
             walletName: getWalletName(blockchain.slug),
             videoUrl: `/videos/${blockchain.slug}-setup.mp4`,
-            thumbnailUrl: `/thumbnails/${blockchain.slug}-wallet.jpg`
+            thumbnailUrl: `/thumbnails/${blockchain.slug}-wallet.jpg`,
         }
     }))
 
@@ -232,6 +236,9 @@ export default function Blockchains() {
                                     <span className={`category-badge ${blockchain.category.toLowerCase().replace(' ', '-')}`}>
                                         {blockchain.category}
                                     </span>
+                                    {hasAirdrop(blockchain.slug) && <>
+                                        TODO: lien vers page airdrop de la blockchain
+                                    </>}
                                 </div>
                                 <div className="blockchain-badges">
                                     <span className={`difficulty-badge ${blockchain.tutorial.difficulty.toLowerCase()}`}>

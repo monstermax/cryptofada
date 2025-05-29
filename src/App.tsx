@@ -75,15 +75,32 @@ function App() {
 
                     {/* Routes dynamiques pour les blockchains */}
                     <Route path="blockchain/:slug" element={<BlockchainDetail />} />
+                    <Route path="blockchain/:slug/tutos" element={<PageSoon />} />
+                    <Route path="blockchain/:slug/airdrops" element={<PageSoon />} />
                     <Route path="blockchain/:slug/dapps" element={<BlockchainDapps />} />
                     <Route path="blockchain/:slug/developers" element={<BlockchainDevelopers />} />
 
                     {/* Route dynamique pour les dApps */}
                     <Route path="dapps/:slug" element={<DappDetail />} />
+                    <Route path="dapps/:slug/tutos" element={<PageSoon />} />
+                    <Route path="dapps/:slug/airdrops" element={<PageSoon />} />
+                    <Route path="dapps/:slug/blockchains" element={<PageSoon />} />
+                    <Route path="dapps/:slug/developers" element={<PageSoon />} />
                 </Route>
             </Routes>
         </Router>
     )
+}
+
+
+function PageSoon() {
+    return (
+        <div className="page">
+            <div className="page-header">
+                <h1>Prochainement...</h1>
+            </div>
+        </div>
+    );
 }
 
 
