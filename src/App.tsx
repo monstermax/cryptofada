@@ -1,0 +1,90 @@
+// App.tsx
+
+import { BrowserRouter as Router, Routes, Route, Link, Outlet, useLocation } from 'react-router-dom'
+
+// Import des composants de pages existants
+import Homepage from './pages/Homepage'
+import Blockchains from './pages/Blockchains'
+import Dapps from './pages/Dapps'
+import Testnets from './pages/Testnets'
+import Developers from './pages/Developers'
+
+// Import des nouveaux composants pour les routes dynamiques
+import BlockchainDetail from './pages/BlockchainDetail'
+import BlockchainDapps from './pages/BlockchainDapps'
+import BlockchainDevelopers from './pages/BlockchainDevelopers'
+import DappDetail from './pages/DappDetail'
+
+import './App.css'
+
+
+// Composant Layout
+function Layout() {
+    const location = useLocation()
+
+    const isActive = (path: string) => {
+        if (path === '/' && location.pathname === '/') return 'nav-link active'
+        if (path !== '/' && location.pathname.startsWith(path)) return 'nav-link active'
+        return 'nav-link'
+    }
+
+    return (
+        <div className="app">
+            <header className="header">
+                <div className="header-content">
+                    <div className="logo">
+                        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <h1>ChainHub</h1>
+                            <span className="tagline">Le lanceur de blockchains</span>
+                        </Link>
+                    </div>
+
+                    <nav className="nav">
+                        <Link to="/" className={isActive('/')}>Accueil</Link>
+                        <Link to="/blockchains" className={isActive('/blockchains')}>Blockchains</Link>
+                        <Link to="/dapps" className={isActive('/dapps')}>dApps</Link>
+                        <Link to="/testnets" className={isActive('/testnets')}>Testnets</Link>
+                        <Link to="/developers" className={isActive('/developers')}>Développeurs</Link>
+                    </nav>
+                </div>
+            </header>
+
+            <main className="main">
+                <Outlet />
+            </main>
+
+            <footer className="footer">
+                <p>&copy; 2025 ChainHub - Votre porte d'entrée vers l'écosystème blockchain</p>
+            </footer>
+        </div>
+    )
+}
+
+
+function App() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Layout />}>
+                    {/* Routes principales */}
+                    <Route index element={<Homepage />} />
+                    <Route path="blockchains" element={<Blockchains />} />
+                    <Route path="dapps" element={<Dapps />} />
+                    <Route path="testnets" element={<Testnets />} />
+                    <Route path="developers" element={<Developers />} />
+
+                    {/* Routes dynamiques pour les blockchains */}
+                    <Route path="blockchain/:slug" element={<BlockchainDetail />} />
+                    <Route path="blockchain/:slug/dapps" element={<BlockchainDapps />} />
+                    <Route path="blockchain/:slug/developers" element={<BlockchainDevelopers />} />
+
+                    {/* Route dynamique pour les dApps */}
+                    <Route path="dapps/:slug" element={<DappDetail />} />
+                </Route>
+            </Routes>
+        </Router>
+    )
+}
+
+
+export default App
