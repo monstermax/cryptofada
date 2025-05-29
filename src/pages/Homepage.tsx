@@ -208,7 +208,7 @@ function BlockchainsSection({ blockchains }: BlockchainsSectionProps) {
                                         to={`/blockchain/${blockchain.slug}`}
                                         className="action-btn"
                                     >
-                                        Explorer
+                                        + d'infos
                                     </Link>
                                 </td>
                             </tr>
@@ -277,7 +277,7 @@ function DappsSection({ dapps }: DappsSectionProps) {
                                         to={`/dapps/${dapp.slug}`}
                                         className="action-btn"
                                     >
-                                        Lancer
+                                        Consulter
                                     </Link>
                                 </td>
                             </tr>

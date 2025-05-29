@@ -45,7 +45,7 @@ export default function Testnets() {
     return (
         <div className="page">
             <div className="page-header">
-                <h1>🧪 Testnets & Blockchains Émergentes</h1>
+                <h1>🧪 Testnets & Airdrops</h1>
                 <p>Testez les nouvelles blockchains et préparez-vous aux potentiels airdrops</p>
             </div>
 
