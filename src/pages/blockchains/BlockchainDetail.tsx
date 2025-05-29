@@ -1,8 +1,15 @@
-// pages/BlockchainDetail.tsx
+// pages/blockchains/BlockchainDetail.tsx
 
+import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 
+import { getBlockchains } from '../../apis'
 
+import type { Blockchain } from '../../types/blockchains_types'
+import { useBlockchain } from '../../hooks/useBlockchain'
+
+
+/*
 // Données mock - à remplacer par un appel API
 const blockchainData = {
     ethereum: {
@@ -55,13 +62,11 @@ const blockchainData = {
     }
     // Ajouter d'autres blockchains...
 };
-
+*/
 
 
 export default function BlockchainDetail() {
-    const { slug } = useParams<{ slug: string }>()
-
-    const blockchain = blockchainData[slug as keyof typeof blockchainData]
+    const { blockchain, loading, slug } = useBlockchain()
 
     if (!blockchain) {
         return (
@@ -72,6 +77,16 @@ export default function BlockchainDetail() {
                     <Link to="/blockchains" className="cta-btn primary">
                         Retour aux blockchains
                     </Link>
+                </div>
+            </div>
+        )
+    }
+
+    if (loading) {
+        return (
+            <div className="page">
+                <div className="loading-section">
+                    <h2>Chargement...</h2>
                 </div>
             </div>
         )

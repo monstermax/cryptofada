@@ -1,8 +1,10 @@
-// pages/BlockchainDapps.tsx
+// pages/blockchains/BlockchainDapps.tsx
 
 import { useParams, Link } from 'react-router-dom'
+import { useBlockchain } from '../../hooks/useBlockchain';
 
 
+/*
 // Données mock des blockchains
 const blockchainInfo = {
     ethereum: { name: 'Ethereum', symbol: 'ETH', color: '#627EEA' },
@@ -10,6 +12,7 @@ const blockchainInfo = {
     polygon: { name: 'Polygon', symbol: 'MATIC', color: '#8247E5' },
     arbitrum: { name: 'Arbitrum', symbol: 'ARB', color: '#28A0F0' }
 }
+*/
 
 
 // Mock des dApps filtrées par blockchain
@@ -92,12 +95,10 @@ const dappsByBlockchain = {
 
 
 export default function BlockchainDapps() {
-    const { slug } = useParams<{ slug: string }>()
-
-    const blockchain = blockchainInfo[slug as keyof typeof blockchainInfo]
+    const { blockchain, loading, slug } = useBlockchain()
     const dapps = dappsByBlockchain[slug as keyof typeof dappsByBlockchain] || []
 
-    if (!blockchain) {
+    if (!blockchain && !loading) {
         return (
             <div className="page">
                 <div className="error-section">
@@ -110,6 +111,18 @@ export default function BlockchainDapps() {
             </div>
         )
     }
+
+    if (loading) {
+        return (
+            <div className="page">
+                <div className="loading-section">
+                    <h2>Chargement...</h2>
+                </div>
+            </div>
+        )
+    }
+
+    if (!blockchain) return null;
 
     const categories = ['Tous', ...Array.from(new Set(dapps.map(dapp => dapp.category)))]
 
@@ -211,9 +224,6 @@ export default function BlockchainDapps() {
                                     <Link to={`/dapps/${dapp.slug}`} className="dapp-link">
                                         {dapp.name}
                                     </Link>
-                                    {dapp.verified && (
-                                        <span className="verified-badge">✓</span>
-                                    )}
                                 </h3>
                                 <span className={`category-badge ${dapp.category.toLowerCase()}`}>
                                     {dapp.category}

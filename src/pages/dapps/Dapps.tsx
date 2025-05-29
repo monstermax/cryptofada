@@ -1,11 +1,12 @@
-// pages/Dapps.tsx
+// pages/dapps//Dapps.tsx
 
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { getBlockchainNameBySlug, getDapps } from '../apis'
+import { dappHasAirdrop, getBlockchainNameBySlug, getDapps } from '../../apis'
 
-import type { Dapp } from '../types'
+import type { Dapp } from '../../types/dapps_types'
+
 
 
 export default function Dapps() {
@@ -14,10 +15,6 @@ export default function Dapps() {
     const [selectedCategory, setSelectedCategory] = useState('Tous')
     const [selectedDifficulty, setSelectedDifficulty] = useState('Tous')
     const [selectedBlockchain, setSelectedBlockchain] = useState('Tous')
-
-    const hasAirdrop = (dappSlug: string) => {
-        return false; // TODO: retourner true si la blockchain a un airdrop enregistré
-    }
 
     useEffect(() => {
         const loadData = async () => {
@@ -189,9 +186,6 @@ export default function Dapps() {
                                 <div className="play-button">▶️</div>
                                 <div className="video-duration">{dapp.tutorial.duration}</div>
                             </div>
-                            {dapp.verified && (
-                                <div className="verified-badge">✓</div>
-                            )}
                         </div>
 
                         {/* Contenu */}
@@ -202,7 +196,7 @@ export default function Dapps() {
                                     <span className={`category-badge ${dapp.category.toLowerCase()}`}>
                                         {dapp.category}
                                     </span>
-                                    {hasAirdrop(dapp.slug) && <>
+                                    {dappHasAirdrop(dapp.slug) && <>
                                         TODO: lien vers page airdrop de la dapp
                                     </>}
                                     <span className={`difficulty-badge ${dapp.tutorial.difficulty.toLowerCase()}`}>
@@ -261,7 +255,7 @@ export default function Dapps() {
                                 📺 Voir le tutoriel
                             </Link>
 
-                            {hasAirdrop(dapp.slug) && <>
+                            {dappHasAirdrop(dapp.slug) && <>
                                 <Link
                                     to={`/dapps/${dapp.slug}/airdrops`}
                                     className="action-btn secondary">

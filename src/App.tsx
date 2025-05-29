@@ -4,16 +4,16 @@ import { BrowserRouter as Router, Routes, Route, Link, Outlet, useLocation } fro
 
 // Import des composants de pages existants
 import Homepage from './pages/Homepage'
-import Blockchains from './pages/Blockchains'
-import Dapps from './pages/Dapps'
+import Blockchains from './pages/blockchains/Blockchains'
+import Dapps from './pages/dapps/Dapps'
 import Testnets from './pages/Testnets'
 import Developers from './pages/Developers'
 
 // Import des nouveaux composants pour les routes dynamiques
-import BlockchainDetail from './pages/BlockchainDetail'
-import BlockchainDapps from './pages/BlockchainDapps'
-import BlockchainDevelopers from './pages/BlockchainDevelopers'
-import DappDetail from './pages/DappDetail'
+import BlockchainDetail from './pages/blockchains/BlockchainDetail'
+import BlockchainDapps from './pages/blockchains/BlockchainDapps'
+import BlockchainDevelopers from './pages/blockchains/BlockchainDevelopers'
+import DappDetail from './pages/dapps/DappDetail'
 
 import './App.css'
 
@@ -75,8 +75,8 @@ function App() {
 
                     {/* Routes dynamiques pour les blockchains */}
                     <Route path="blockchain/:slug" element={<BlockchainDetail />} />
-                    <Route path="blockchain/:slug/tutos" element={<PageSoon />} />
-                    <Route path="blockchain/:slug/airdrops" element={<PageSoon />} />
+                    <Route path="blockchain/:slug/tutos" element={<BlockchainTutos />} />
+                    <Route path="blockchain/:slug/airdrops" element={<BlockchainAirdrops />} />
                     <Route path="blockchain/:slug/dapps" element={<BlockchainDapps />} />
                     <Route path="blockchain/:slug/developers" element={<BlockchainDevelopers />} />
 
@@ -92,6 +92,26 @@ function App() {
     )
 }
 
+
+function BlockchainTutos() {
+    return (
+        <div className="page">
+            <div className="page-header">
+                <h1>BlockchainTutos. Prochainement...</h1>
+            </div>
+        </div>
+    );
+}
+
+function BlockchainAirdrops() {
+    return (
+        <div className="page">
+            <div className="page-header">
+                <h1>BlockchainAirdrops. Prochainement...</h1>
+            </div>
+        </div>
+    );
+}
 
 function PageSoon() {
     return (

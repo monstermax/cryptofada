@@ -1,6 +1,6 @@
 // data/guides_data.ts
 
-import type { TestnetGuide } from "../types";
+import type { TestnetGuide } from "../types/blockchains_types";
 
 
 // Guides pour les testnets

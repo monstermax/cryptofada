@@ -1,6 +1,6 @@
 // data/dapps_data.ts
 
-import type { Dapp } from "../types";
+import type { Dapp } from "../types/blockchains_types";
 
 
 // Liste unique des dApps

@@ -1,79 +1,18 @@
-// pages/DappDetail.tsx
+// pages/dapps/DappDetail.tsx
 
+import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 
-
-// Données mock des dApps - à remplacer par un appel API
-const dappsData = {
-    uniswap: {
-        name: 'Uniswap',
-        category: 'DEX',
-        description: 'Uniswap est un protocole d\'échange décentralisé construit sur Ethereum. Il permet aux utilisateurs d\'échanger des tokens ERC-20 sans intermédiaire.',
-        longDescription: 'Uniswap utilise un modèle de teneur de marché automatisé (AMM) qui permet aux utilisateurs de trader contre un pool de liquidité. Les utilisateurs peuvent également devenir fournisseurs de liquidité en déposant des tokens dans les pools et en gagnant des frais de trading.',
-        blockchains: [
-            { name: 'Ethereum', slug: 'ethereum', color: '#627EEA' },
-            { name: 'Polygon', slug: 'polygon', color: '#8247E5' },
-            { name: 'Arbitrum', slug: 'arbitrum', color: '#28A0F0' }
-        ],
-        metrics: {
-            tvl: '$4.2B',
-            users24h: '45.2K',
-            volume24h: '$850M',
-            transactions24h: '125K',
-            fees24h: '$2.1M',
-            totalUsers: '3.2M'
-        },
-        links: {
-            website: 'https://app.uniswap.org',
-            docs: 'https://docs.uniswap.org',
-            github: 'https://github.com/Uniswap',
-            twitter: 'https://twitter.com/Uniswap',
-            discord: 'https://discord.gg/FCfyBSbCU5'
-        },
-        verified: true,
-        founded: '2018',
-        team: 'Uniswap Labs',
-        token: 'UNI'
-    },
-    aave: {
-        name: 'Aave',
-        category: 'Lending',
-        description: 'Aave est un protocole de liquidité décentralisé où les utilisateurs peuvent participer en tant que déposants ou emprunteurs.',
-        longDescription: 'Aave permet aux utilisateurs de déposer des crypto-monnaies pour gagner des intérêts ou d\'emprunter des actifs en fournissant des garanties. Le protocole utilise des taux d\'intérêt algorithmiques basés sur l\'utilisation des pools.',
-        blockchains: [
-            { name: 'Ethereum', slug: 'ethereum', color: '#627EEA' },
-            { name: 'Polygon', slug: 'polygon', color: '#8247E5' },
-            { name: 'Arbitrum', slug: 'arbitrum', color: '#28A0F0' }
-        ],
-        metrics: {
-            tvl: '$12.5B',
-            users24h: '12.8K',
-            volume24h: '$245M',
-            transactions24h: '28K',
-            fees24h: '$650K',
-            totalUsers: '450K'
-        },
-        links: {
-            website: 'https://app.aave.com',
-            docs: 'https://docs.aave.com',
-            github: 'https://github.com/aave',
-            twitter: 'https://twitter.com/AaveAave',
-            discord: 'https://discord.gg/CvKUrqM'
-        },
-        verified: true,
-        founded: '2017',
-        team: 'Aave Companies',
-        token: 'AAVE'
-    }
-};
+import { useDapp } from '../../hooks/useDapp'
+import { getBlockchainBySlug } from '../../apis'
+import type { Blockchain, BlockchainSlug } from '../../types/blockchains_types'
+import type { DappMetrics } from '../../types/dapps_types'
 
 
 export default function DappDetail() {
-    const { slug } = useParams<{ slug: string }>()
+    const { dapp, loading, slug } = useDapp()
 
-    const dapp = dappsData[slug as keyof typeof dappsData]
-
-    if (!dapp) {
+    if (!dapp && !loading) {
         return (
             <div className="page">
                 <div className="error-section">
@@ -86,6 +25,21 @@ export default function DappDetail() {
             </div>
         )
     }
+
+    if (loading) {
+        return (
+            <div className="page">
+                <div className="loading-section">
+                    <h2>Chargement...</h2>
+                </div>
+            </div>
+        )
+    }
+
+    if (!dapp) return null;
+
+    const dappMetrics: DappMetrics | null = null as DappMetrics | null;
+
 
     return (
         <div className="page">
@@ -105,9 +59,6 @@ export default function DappDetail() {
                         <div className="dapp-title">
                             <h1>
                                 {dapp.name}
-                                {dapp.verified && (
-                                    <span className="verified-badge-large">✓ Vérifiée</span>
-                                )}
                             </h1>
                             <div className="dapp-meta">
                                 <span className={`category-badge ${dapp.category.toLowerCase()}`}>
@@ -145,17 +96,29 @@ export default function DappDetail() {
             <div className="supported-blockchains">
                 <h2>Blockchains Supportées</h2>
                 <div className="blockchain-list">
-                    {dapp.blockchains.map((blockchain) => (
-                        <Link
-                            key={blockchain.slug}
-                            to={`/blockchain/${blockchain.slug}`}
-                            className="blockchain-chip"
-                            style={{ '--chain-color': blockchain.color } as any}
-                        >
-                            <div className="blockchain-dot" style={{ backgroundColor: blockchain.color }}></div>
-                            <span>{blockchain.name}</span>
-                        </Link>
-                    ))}
+                    {dapp.blockchains.map((blockchainSlug: BlockchainSlug) => {
+                        const blockchain = null as Blockchain | null; // TODO ; // await getBlockchainBySlug(blockchainSlug);
+
+                        if (!blockchain) {
+                            return (
+                                <>
+                                    TODO
+                                </>
+                            );
+                        }
+
+                        return (
+                            <Link
+                                key={blockchain.slug}
+                                to={`/blockchain/${blockchain.slug}`}
+                                className="blockchain-chip"
+                                style={{ '--chain-color': blockchain.color } as any}
+                            >
+                                <div className="blockchain-dot" style={{ backgroundColor: blockchain.color }}></div>
+                                <span>{blockchain.name}</span>
+                            </Link>
+                        );
+                    })}
                 </div>
             </div>
 
@@ -163,27 +126,27 @@ export default function DappDetail() {
             <div className="metrics-grid">
                 <div className="metric-card">
                     <div className="metric-label">TVL Total</div>
-                    <div className="metric-value">{dapp.metrics.tvl}</div>
+                    <div className="metric-value">{dappMetrics ? dappMetrics.tvl : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Utilisateurs 24h</div>
-                    <div className="metric-value">{dapp.metrics.users24h}</div>
+                    <div className="metric-value">{dappMetrics ? dappMetrics.users24h : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Volume 24h</div>
-                    <div className="metric-value">{dapp.metrics.volume24h}</div>
+                    <div className="metric-value">{dappMetrics ? dappMetrics.volume24h : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Transactions 24h</div>
-                    <div className="metric-value">{dapp.metrics.transactions24h}</div>
+                    <div className="metric-value">{dappMetrics ? dappMetrics.transactions24h : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Frais générés 24h</div>
-                    <div className="metric-value">{dapp.metrics.fees24h}</div>
+                    <div className="metric-value">{dappMetrics ? dappMetrics.fees24h : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Utilisateurs Total</div>
-                    <div className="metric-value">{dapp.metrics.totalUsers}</div>
+                    <div className="metric-value">{dappMetrics ? dappMetrics.totalUsers : '-'}</div>
                 </div>
             </div>
 

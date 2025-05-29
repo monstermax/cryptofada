@@ -1,42 +1,50 @@
 // apis.ts
 
 import { ALL_BLOCKCHAINS } from "./data/blockchains_data";
+import { BLOCKCHAINS_DEVELOPER_RESOURCES } from "./data/blockchains_developper_resources_data";
 import { ALL_DAPPS } from "./data/dapps_data";
 import { TESTNET_GUIDES } from "./data/guides_data";
 import { HOMEPAGE_SELECTION } from "./data/homepage_selection_data";
 
-import type { Blockchain, Dapp, TestnetGuide, HomepageSelection, DeveloperResources } from "./types";
+import type { Blockchain, BlockchainSlug } from "./types/blockchains_types";
+import type { Dapp, DappSlug } from "./types/dapps_types";
+import type { BlockchainDevelopperResource, TestnetGuide } from "./types/types";
 
 
 // === FONCTIONS API ===
 
 export async function getBlockchains(): Promise<Blockchain[]> {
-    // Simulation d'un appel API
+    // Simulation d'un appel API (100 ms)
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve(ALL_BLOCKCHAINS.filter(b => b.network === 'mainnet'));
+            resolve(ALL_BLOCKCHAINS);
         }, 100);
     });
 }
+
+
+export async function getMainnets(): Promise<Blockchain[]> {
+    const blockchains = await getBlockchains();
+    return blockchains.filter(b => b.network === 'mainnet');
+}
+
 
 export async function getTestnets(): Promise<Blockchain[]> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(ALL_BLOCKCHAINS.filter(b => b.network === 'testnet'));
-        }, 100);
-    });
+    const blockchains = await getBlockchains();
+    return blockchains.filter(b => b.network === 'testnet');
 }
+
 
 export async function getBlockchainBySlug(slug: string): Promise<Blockchain | null> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const blockchain = ALL_BLOCKCHAINS.find(b => b.slug === slug);
-            resolve(blockchain || null);
-        }, 100);
-    });
+    const blockchains = await getBlockchains();
+    const blockchain = blockchains.find(b => b.slug === slug);
+    return blockchain ?? null;
 }
 
+
+
 export async function getDapps(): Promise<Dapp[]> {
+    // Simulation d'un appel API (100 ms)
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(ALL_DAPPS);
@@ -44,23 +52,30 @@ export async function getDapps(): Promise<Dapp[]> {
     });
 }
 
-export async function getDappBySlug(slug: string): Promise<Dapp | null> {
+export async function getDappBySlug(slug: DappSlug): Promise<Dapp | null> {
+    const dapps = await getDapps();
+    const dapp = dapps.find(d => d.slug === slug);
+    return dapp ?? null;
+}
+
+
+export async function getDappsByBlockchain(blockchainSlug: BlockchainSlug): Promise<Dapp[]> {
+    const dapps = await getDapps();
+    const blockchainDapps = dapps.filter(d => d.blockchains.includes(blockchainSlug));
+    return blockchainDapps;
+}
+
+
+export async function getBlockchainsDevelopperResources(): Promise<BlockchainDevelopperResource[]> {
+    // Simulation d'un appel API
     return new Promise((resolve) => {
         setTimeout(() => {
-            const dapp = ALL_DAPPS.find(d => d.slug === slug);
-            resolve(dapp || null);
+            resolve(BLOCKCHAINS_DEVELOPER_RESOURCES /* .filter(b => b.network === 'mainnet') */ );
         }, 100);
     });
 }
 
-export async function getDappsByBlockchain(blockchainSlug: string): Promise<Dapp[]> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const dapps = ALL_DAPPS.filter(d => d.blockchains.includes(blockchainSlug));
-            resolve(dapps);
-        }, 100);
-    });
-}
+
 
 // === FONCTIONS HOMEPAGE ===
 
@@ -73,6 +88,8 @@ export async function getHomepageDapps(): Promise<Dapp[]> {
     const allDapps = await getDapps();
     return allDapps.filter(d => HOMEPAGE_SELECTION.featuredDapps.includes(d.slug));
 }
+
+
 
 // === FONCTIONS TESTNETS ===
 
@@ -95,8 +112,20 @@ export async function getTestnetGuideByBlockchain(blockchainSlug: string): Promi
 
 
 // Fonction utilitaire pour convertir slug en nom de blockchain
-export function getBlockchainNameBySlug(slug: string): string {
+export function getBlockchainNameBySlug(slug: BlockchainSlug): string {
     const blockchain = ALL_BLOCKCHAINS.find(chain => chain.slug === slug);
     return blockchain?.name || slug
 }
+
+
+
+export function blockchainHasAirdrop(blockchainSlug: BlockchainSlug) {
+    return false; // TODO: retourner true si la blockchain a un airdrop enregistré
+}
+
+
+export function dappHasAirdrop(dappSlug: DappSlug) {
+    return false; // TODO: retourner true si la dapp a un airdrop enregistré
+}
+
 

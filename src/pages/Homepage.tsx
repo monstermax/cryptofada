@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react'
 
 import { getBlockchainNameBySlug, getHomepageBlockchains, getHomepageDapps } from '../apis'
 
-import type { Blockchain, Dapp } from '../types'
+import type { Blockchain, BlockchainMetrics } from '../types/blockchains_types'
+import type { Dapp, DappMetrics } from '../types/dapps_types'
 
 
 export default function Homepage() {
@@ -22,8 +23,10 @@ export default function Homepage() {
                 ])
                 setBlockchains(blockchainsData)
                 setDapps(dappsData)
+
             } catch (error) {
                 console.error('Erreur lors du chargement des données:', error)
+
             } finally {
                 setLoading(false)
             }
@@ -176,43 +179,45 @@ function BlockchainsSection({ blockchains }: BlockchainsSectionProps) {
                             <th>Catégorie</th>
                             <th>TVL</th>
                             <th>Market Cap</th>
-                            <th>dApps</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {blockchains.map((blockchain) => (
-                            <tr key={blockchain.symbol}>
-                                <td>
-                                    <div className="blockchain-cell">
-                                        <div
-                                            className="blockchain-dot"
-                                            style={{ backgroundColor: blockchain.color }}
-                                        ></div>
-                                        <div>
-                                            <div className="blockchain-name">{blockchain.name}</div>
-                                            <div className="blockchain-symbol">{blockchain.symbol}</div>
+                        {blockchains.map((blockchain) => {
+                            const blockchainMetrics: BlockchainMetrics | null = null as BlockchainMetrics | null;
+
+                            return (
+                                <tr key={blockchain.symbol}>
+                                    <td>
+                                        <div className="blockchain-cell">
+                                            <div
+                                                className="blockchain-dot"
+                                                style={{ backgroundColor: blockchain.color }}
+                                            ></div>
+                                            <div>
+                                                <div className="blockchain-name">{blockchain.name}</div>
+                                                <div className="blockchain-symbol">{blockchain.symbol}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className={`category-badge ${blockchain.category.toLowerCase().replace(' ', '-')}`}>
-                                        {blockchain.category}
-                                    </span>
-                                </td>
-                                <td className="metric-value">{blockchain.metrics.tvl}</td>
-                                <td className="metric-value">{blockchain.metrics.marketCap}</td>
-                                <td className="dapps-count">{blockchain.dappsCount.toLocaleString()}</td>
-                                <td>
-                                    <Link
-                                        to={`/blockchain/${blockchain.slug}`}
-                                        className="action-btn"
-                                    >
-                                        + d'infos
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                    <td>
+                                        <span className={`category-badge ${blockchain.category.toLowerCase().replace(' ', '-')}`}>
+                                            {blockchain.category}
+                                        </span>
+                                    </td>
+                                    <td className="metric-value">{blockchainMetrics ? blockchainMetrics.tvl : '-'}</td>
+                                    <td className="metric-value">{blockchainMetrics ? blockchainMetrics.marketCap : '-'}</td>
+                                    <td>
+                                        <Link
+                                            to={`/blockchain/${blockchain.slug}`}
+                                            className="action-btn"
+                                        >
+                                            + d'infos
+                                        </Link>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
@@ -247,41 +252,45 @@ function DappsSection({ dapps }: DappsSectionProps) {
                         </tr>
                     </thead>
                     <tbody>
-                        {dapps.map((dapp) => (
-                            <tr key={dapp.slug}>
-                                <td>
-                                    <div className="dapp-cell">
-                                        <div className="dapp-name">{dapp.name}</div>
-                                        <div className="dapp-description">{dapp.description}</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className={`category-badge ${dapp.category.toLowerCase()}`}>
-                                        {dapp.category}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div className="blockchains-list">
-                                        {dapp.blockchains.map((chainSlug, index) => (
-                                            <span key={chainSlug} className="blockchain-tag">
-                                                {getBlockchainNameBySlug(chainSlug)}
-                                                {index < dapp.blockchains.length - 1 && ', '}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </td>
-                                <td className="metric-value">{dapp.metrics.tvl}</td>
-                                <td className="metric-value">{dapp.metrics.volume24h}</td>
-                                <td>
-                                    <Link
-                                        to={`/dapps/${dapp.slug}`}
-                                        className="action-btn"
-                                    >
-                                        Consulter
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))}
+                        {dapps.map((dapp) => {
+                            const dappMetrics: DappMetrics | null = null as DappMetrics | null;
+
+                            return (
+                                <tr key={dapp.slug}>
+                                    <td>
+                                        <div className="dapp-cell">
+                                            <div className="dapp-name">{dapp.name}</div>
+                                            <div className="dapp-description">{dapp.description}</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span className={`category-badge ${dapp.category.toLowerCase()}`}>
+                                            {dapp.category}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="blockchains-list">
+                                            {dapp.blockchains.map((chainSlug, index) => (
+                                                <span key={chainSlug} className="blockchain-tag">
+                                                    {getBlockchainNameBySlug(chainSlug)}
+                                                    {index < dapp.blockchains.length - 1 && ', '}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </td>
+                                    <td className="metric-value">{dappMetrics ? dappMetrics.tvl : 'n'}</td>
+                                    <td className="metric-value">{dappMetrics ? dappMetrics.volume24h : 'n'}</td>
+                                    <td>
+                                        <Link
+                                            to={`/dapps/${dapp.slug}`}
+                                            className="action-btn"
+                                        >
+                                            Consulter
+                                        </Link>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>

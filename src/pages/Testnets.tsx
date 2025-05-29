@@ -1,21 +1,18 @@
 // pages/Testnets.tsx
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type FC } from 'react'
 import { Link } from 'react-router-dom'
 
-import { getTestnets, getTestnetGuides } from '../apis'
+import { getTestnets, getTestnetGuides, blockchainHasAirdrop } from '../apis'
 
-import type { Blockchain, TestnetGuide } from '../types'
+import type { Blockchain, BlockchainMetrics } from '../types/blockchains_types'
+import type { TestnetGuide } from '../types/types'
 
 
 export default function Testnets() {
     const [testnets, setTestnets] = useState<Blockchain[]>([])
     const [guides, setGuides] = useState<TestnetGuide[]>([])
     const [loading, setLoading] = useState(true)
-
-    const hasAirdrop = (blockchainSlug: string) => {
-        return false; // TODO: retourner true si la blockchain a un airdrop enregistré
-    }
 
     useEffect(() => {
         const loadData = async () => {
@@ -26,8 +23,10 @@ export default function Testnets() {
                 ])
                 setTestnets(testnetsData)
                 setGuides(guidesData)
+
             } catch (error) {
                 console.error('Erreur lors du chargement des testnets:', error)
+
             } finally {
                 setLoading(false)
             }
@@ -49,7 +48,7 @@ export default function Testnets() {
     return (
         <div className="page">
             <div className="page-header">
-                <h1>🧪 Testnets & Airdrops</h1>
+                <h1>🧪 Testnets</h1>
                 <p>Testez les nouvelles blockchains et préparez-vous aux potentiels airdrops</p>
             </div>
 
@@ -67,6 +66,130 @@ export default function Testnets() {
                 </div>
             </div>
 
+            {/* Section Guides d'Airdrop */}
+            <AirdropGuides
+                testnets={testnets}
+                guides={guides}
+                />
+
+            {/* Section Liste des Testnets */}
+            <TestnetsList
+                testnets={testnets}
+                guides={guides}
+                />
+
+            {/* Section Conseils */}
+            <Tips />
+
+        </div>
+    )
+}
+
+
+type TestnetsListProps = {
+    testnets: Blockchain[],
+    guides: TestnetGuide[],
+};
+
+
+const TestnetsList: FC<TestnetsListProps> = ({ testnets, guides }) => {
+    return (
+        <>
+            {/* Section Liste des Testnets */}
+            <section className="testnets-section">
+                <div className="section-header">
+                    <h2>🔗 Testnets Disponibles</h2>
+                    <p>Liste complète des blockchains en phase de test</p>
+                </div>
+
+                <div className="table-container">
+                    <table className="data-table">
+                        <thead>
+                            <tr>
+                                <th>Blockchain</th>
+                                <th>Catégorie</th>
+                                <th>Performance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {testnets.map((testnet) => {
+                                const hasGuide = guides.some(g => g.blockchain === testnet.slug);
+                                const blockchainMetrics: BlockchainMetrics | null = null as BlockchainMetrics | null;
+
+                                return (
+                                    <tr key={testnet.slug}>
+                                        <td>
+                                            <div className="blockchain-cell">
+                                                <div
+                                                    className="blockchain-dot"
+                                                    style={{ backgroundColor: testnet.color }}
+                                                ></div>
+                                                <div>
+                                                    <div className="blockchain-name">{testnet.name}</div>
+                                                    <div className="blockchain-symbol">{testnet.symbol}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span className={`category-badge ${testnet.category.toLowerCase().replace(' ', '-')}`}>
+                                                {testnet.category}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div className="performance-info">
+                                                <div className="perf-item">
+                                                    <span className="perf-label">TPS:</span>
+                                                    <span className="perf-value">
+                                                        {blockchainMetrics && <>
+                                                            {blockchainMetrics.blockTime === '0.1s' ? '10k+' :
+                                                                blockchainMetrics.blockTime === '0.05s' ? '100k+' : '1k+'}
+                                                        </>}
+                                                        {!blockchainMetrics && <>-</>}
+                                                    </span>
+                                                </div>
+                                                <div className="perf-item">
+                                                    <span className="perf-label">Block:</span>
+                                                    <span className="perf-value">{blockchainMetrics ? blockchainMetrics.blockTime : '-'}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="action-buttons">
+                                                <Link
+                                                    to={`/blockchain/${testnet.slug}`}
+                                                    className="action-btn primary"
+                                                >
+                                                    Explorer
+                                                </Link>
+                                                {hasGuide && (
+                                                    <button className="action-btn secondary guide-btn">
+                                                        📋 Guide
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </>
+    )
+}
+
+
+type AirdropGuidesProps = {
+    testnets: Blockchain[],
+    guides: TestnetGuide[],
+};
+
+const AirdropGuides: FC<AirdropGuidesProps> = ({ testnets, guides }) => {
+
+    return (
+        <>
             {/* Section Guides d'Airdrop */}
             <section className="guides-section">
                 <div className="section-header">
@@ -164,7 +287,7 @@ export default function Testnets() {
                                                 Explorer
                                             </Link>
 
-                                            {hasAirdrop(blockchain.slug) && <>
+                                            {blockchainHasAirdrop(blockchain.slug) && <>
                                                 <Link
                                                     to={`/blockchain/${blockchain.slug}/airdrops`}
                                                     className="action-btn secondary">
@@ -179,92 +302,14 @@ export default function Testnets() {
                     })}
                 </div>
             </section>
+        </>
+    );
+}
 
-            {/* Section Liste des Testnets */}
-            <section className="testnets-section">
-                <div className="section-header">
-                    <h2>🔗 Testnets Disponibles</h2>
-                    <p>Liste complète des blockchains en phase de test</p>
-                </div>
 
-                <div className="table-container">
-                    <table className="data-table">
-                        <thead>
-                            <tr>
-                                <th>Blockchain</th>
-                                <th>Catégorie</th>
-                                <th>Performance</th>
-                                <th>dApps Test</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {testnets.map((testnet) => {
-                                const hasGuide = guides.some(g => g.blockchain === testnet.slug)
-                                return (
-                                    <tr key={testnet.slug}>
-                                        <td>
-                                            <div className="blockchain-cell">
-                                                <div
-                                                    className="blockchain-dot"
-                                                    style={{ backgroundColor: testnet.color }}
-                                                ></div>
-                                                <div>
-                                                    <div className="blockchain-name">{testnet.name}</div>
-                                                    <div className="blockchain-symbol">{testnet.symbol}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span className={`category-badge ${testnet.category.toLowerCase().replace(' ', '-')}`}>
-                                                {testnet.category}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="performance-info">
-                                                <div className="perf-item">
-                                                    <span className="perf-label">TPS:</span>
-                                                    <span className="perf-value">
-                                                        {testnet.metrics.blockTime === '0.1s' ? '10k+' :
-                                                            testnet.metrics.blockTime === '0.05s' ? '100k+' : '1k+'}
-                                                    </span>
-                                                </div>
-                                                <div className="perf-item">
-                                                    <span className="perf-label">Block:</span>
-                                                    <span className="perf-value">{testnet.metrics.blockTime}</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="dapps-count">{testnet.dappsCount}</td>
-                                        <td>
-                                            <span className={`status-badge ${testnet.status}`}>
-                                                {testnet.status === 'active' ? 'Actif' : 'Inactif'}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="action-buttons">
-                                                <Link
-                                                    to={`/blockchain/${testnet.slug}`}
-                                                    className="action-btn primary"
-                                                >
-                                                    Explorer
-                                                </Link>
-                                                {hasGuide && (
-                                                    <button className="action-btn secondary guide-btn">
-                                                        📋 Guide
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
+function Tips() {
+    return (
+        <>
             {/* Section Conseils */}
             <section className="tips-section">
                 <div className="section-header">
@@ -298,6 +343,7 @@ export default function Testnets() {
                     </div>
                 </div>
             </section>
-        </div>
-    )
+        </>
+    );
 }
+

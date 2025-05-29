@@ -1,11 +1,11 @@
-// pages/Blockchains.tsx
+// pages/blockchains/Blockchains.tsx
 
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { getBlockchains } from '../apis'
+import { blockchainHasAirdrop, getBlockchains } from '../../apis'
 
-import type { Blockchain } from '../types'
+import type { Blockchain, BlockchainMetrics } from '../../types/blockchains_types'
 
 
 export default function Blockchains() {
@@ -14,17 +14,15 @@ export default function Blockchains() {
     const [selectedPath, setSelectedPath] = useState('Tous')
     const [selectedDifficulty, setSelectedDifficulty] = useState('Tous')
 
-    const hasAirdrop = (blockchainSlug: string) => {
-        return false; // TODO: retourner true si la blockchain a un airdrop enregistré
-    }
-
     useEffect(() => {
         const loadData = async () => {
             try {
                 const blockchainsData = await getBlockchains()
                 setBlockchains(blockchainsData)
+
             } catch (error) {
                 console.error('Erreur lors du chargement des blockchains:', error)
+
             } finally {
                 setLoading(false)
             }
@@ -209,101 +207,105 @@ export default function Blockchains() {
 
             {/* Grille des tutoriels blockchain */}
             <div className="blockchain-tutorials-grid">
-                {filteredBlockchains.map((blockchain) => (
-                    <div key={blockchain.slug} className="blockchain-tutorial-card">
-                        {/* Thumbnail */}
-                        <div className="blockchain-thumbnail">
-                            <div
-                                className="blockchain-logo"
-                                style={{ backgroundColor: blockchain.color }}
-                            >
-                                <span className="blockchain-symbol">{blockchain.symbol}</span>
-                            </div>
-                            <div className="thumbnail-overlay">
-                                <div className="play-button">▶️</div>
-                                <div className="video-duration">{blockchain.tutorial.duration}</div>
-                            </div>
-                            <div className="cost-badge">
-                                {blockchain.tutorial.startingCost}
-                            </div>
-                        </div>
+                {filteredBlockchains.map((blockchain) => {
+                    const blockchainMetrics: BlockchainMetrics | null = null as BlockchainMetrics | null;
 
-                        {/* Contenu */}
-                        <div className="blockchain-content">
-                            <div className="blockchain-header">
-                                <div className="blockchain-title">
-                                    <h3>{blockchain.name}</h3>
-                                    <span className={`category-badge ${blockchain.category.toLowerCase().replace(' ', '-')}`}>
-                                        {blockchain.category}
-                                    </span>
-                                    {hasAirdrop(blockchain.slug) && <>
-                                        TODO: lien vers page airdrop de la blockchain
-                                    </>}
+                    return (
+                        <div key={blockchain.slug} className="blockchain-tutorial-card">
+                            {/* Thumbnail */}
+                            <div className="blockchain-thumbnail">
+                                <div
+                                    className="blockchain-logo"
+                                    style={{ backgroundColor: blockchain.color }}
+                                >
+                                    <span className="blockchain-symbol">{blockchain.symbol}</span>
                                 </div>
-                                <div className="blockchain-badges">
-                                    <span className={`difficulty-badge ${blockchain.tutorial.difficulty.toLowerCase()}`}>
-                                        {blockchain.tutorial.difficulty}
-                                    </span>
+                                <div className="thumbnail-overlay">
+                                    <div className="play-button">▶️</div>
+                                    <div className="video-duration">{blockchain.tutorial.duration}</div>
+                                </div>
+                                <div className="cost-badge">
+                                    {blockchain.tutorial.startingCost}
                                 </div>
                             </div>
 
-                            <p className="blockchain-description">{blockchain.description}</p>
-
-                            <div className="blockchain-stats">
-                                <div className="stat-item">
-                                    <span className="stat-label">Frais moyens:</span>
-                                    <span className="stat-value">{blockchain.metrics.gasPrice}</span>
-                                </div>
-                                <div className="stat-item">
-                                    <span className="stat-label">Temps de bloc:</span>
-                                    <span className="stat-value">{blockchain.metrics.blockTime}</span>
-                                </div>
-                                <div className="stat-item">
-                                    <span className="stat-label">dApps:</span>
-                                    <span className="stat-value">{blockchain.dappsCount}</span>
-                                </div>
-                            </div>
-
-                            <div className="tutorial-learning-goals">
-                                <h4>Ce que vous apprendrez :</h4>
-                                <ul>
-                                    {blockchain.tutorial.learningGoals.map((goal, index) => (
-                                        <li key={index}>{goal}</li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            <div className="tutorial-prerequisites">
-                                <h4>Prérequis :</h4>
-                                <div className="prerequisites-list">
-                                    {blockchain.tutorial.prerequisites.map((prereq, index) => (
-                                        <span key={index} className="prerequisite-tag">
-                                            {prereq}
+                            {/* Contenu */}
+                            <div className="blockchain-content">
+                                <div className="blockchain-header">
+                                    <div className="blockchain-title">
+                                        <h3>{blockchain.name}</h3>
+                                        <span className={`category-badge ${blockchain.category.toLowerCase().replace(' ', '-')}`}>
+                                            {blockchain.category}
                                         </span>
-                                    ))}
+                                        {blockchainHasAirdrop(blockchain.slug) && <>
+                                            TODO: lien vers page airdrop de la blockchain
+                                        </>}
+                                    </div>
+                                    <div className="blockchain-badges">
+                                        <span className={`difficulty-badge ${blockchain.tutorial.difficulty.toLowerCase()}`}>
+                                            {blockchain.tutorial.difficulty}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <p className="blockchain-description">{blockchain.description}</p>
+
+                                <div className="blockchain-stats">
+                                    <div className="stat-item">
+                                        <span className="stat-label">Frais moyens:</span>
+                                        <span className="stat-value">{blockchainMetrics ? blockchainMetrics.gasPrice : '-'}</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="stat-label">Temps de bloc:</span>
+                                        <span className="stat-value">{blockchainMetrics ? blockchainMetrics.blockTime : '-'}</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="stat-label">dApps:</span>
+                                        <span className="stat-value">-</span>
+                                    </div>
+                                </div>
+
+                                <div className="tutorial-learning-goals">
+                                    <h4>Ce que vous apprendrez :</h4>
+                                    <ul>
+                                        {blockchain.tutorial.learningGoals.map((goal, index) => (
+                                            <li key={index}>{goal}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="tutorial-prerequisites">
+                                    <h4>Prérequis :</h4>
+                                    <div className="prerequisites-list">
+                                        {blockchain.tutorial.prerequisites.map((prereq, index) => (
+                                            <span key={index} className="prerequisite-tag">
+                                                {prereq}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="wallet-info">
+                                    <h4>Wallet recommandé :</h4>
+                                    <span className="wallet-name">{blockchain.tutorial.walletName}</span>
                                 </div>
                             </div>
 
-                            <div className="wallet-info">
-                                <h4>Wallet recommandé :</h4>
-                                <span className="wallet-name">{blockchain.tutorial.walletName}</span>
+                            {/* Actions */}
+                            <div className="blockchain-actions">
+                                <button className="action-btn primary">
+                                    🎥 Voir le tutoriel
+                                </button>
+                                <Link
+                                    to={`/blockchain/${blockchain.slug}`}
+                                    className="action-btn secondary"
+                                >
+                                    🔍 Explorer
+                                </Link>
                             </div>
                         </div>
-
-                        {/* Actions */}
-                        <div className="blockchain-actions">
-                            <button className="action-btn primary">
-                                🎥 Voir le tutoriel
-                            </button>
-                            <Link
-                                to={`/blockchain/${blockchain.slug}`}
-                                className="action-btn secondary"
-                            >
-                                🔍 Explorer
-                            </Link>
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             {/* CTA Section */}

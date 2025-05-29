@@ -1,6 +1,6 @@
 // data/homepage_selection_data.ts
 
-import type { HomepageSelection } from "../types";
+import type { HomepageSelection } from "../types/blockchains_types";
 
 
 // Sélection pour la homepage
