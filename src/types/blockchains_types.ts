@@ -1,17 +1,6 @@
 // blockchains_types.ts
 
-
-export enum BlockchainSlug {
-    ETHEREUM = 'ethereum',
-    BSC = 'bsc',
-    SOLANA = 'solana',
-    POLYGON = 'polygon',
-    BASE = 'base',
-    MONAD = 'monad',
-    MEGAETH = 'megaeth',
-    ARBITRUM = 'arbitrum',
-}
-
+import type { BlockchainSlug } from "../data/blockchains_data";
 
 
 export interface Blockchain {

@@ -21,7 +21,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
     {
         name: 'Ethereum',
         symbol: 'ETH',
-        slug: 'ethereum',
+        slug: BlockchainSlug.ETHEREUM,
         color: '#627EEA',
         description: 'La blockchain programmable leader',
         longDescription: 'Ethereum est la plateforme blockchain programmable leader mondiale, permettant aux développeurs de créer des applications décentralisées.',
@@ -29,7 +29,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
         consensus: 'Proof of Stake',
         launched: '2015',
         links: {
-            website: 'ethereum.org',
+            website: 'https://ethereum.org',
             whitepaper: 'https://ethereum.org/whitepaper/',
             github: 'https://github.com/ethereum',
             explorer: 'https://etherscan.io',
@@ -39,7 +39,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
     {
         name: 'Solana',
         symbol: 'SOL',
-        slug: 'solana',
+        slug: BlockchainSlug.SOLANA,
         color: '#9945FF',
         description: 'Blockchain haute performance',
         longDescription: 'Solana est une blockchain haute performance conçue pour les applications décentralisées à grande échelle.',
@@ -57,7 +57,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
     {
         name: 'Polygon',
         symbol: 'MATIC',
-        slug: 'polygon',
+        slug: BlockchainSlug.POLYGON,
         color: '#8247E5',
         description: 'Solution de mise à l\'échelle d\'Ethereum',
         longDescription: 'Polygon est une solution de mise à l\'échelle pour Ethereum qui offre des transactions rapides et peu coûteuses.',
@@ -75,7 +75,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
     {
         name: 'Arbitrum',
         symbol: 'ARB',
-        slug: 'arbitrum',
+        slug: BlockchainSlug.ARBITRUM,
         color: '#28A0F0',
         description: 'Layer 2 optimiste pour Ethereum',
         longDescription: 'Arbitrum est une solution de Layer 2 optimiste qui permet des transactions Ethereum rapides et peu coûteuses.',
@@ -93,7 +93,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
     {
         name: 'Base',
         symbol: 'BASE',
-        slug: 'base',
+        slug: BlockchainSlug.BASE,
         color: '#0052FF',
         description: 'Layer 2 par Coinbase',
         longDescription: 'Base est une solution Layer 2 développée par Coinbase, offrant un écosystème sécurisé et facile d\'accès.',
@@ -111,7 +111,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
     {
         name: 'BNB Smart Chain',
         symbol: 'BNB',
-        slug: 'bsc',
+        slug: BlockchainSlug.BSC,
         color: '#F3BA2F',
         description: 'Blockchain rapide et peu coûteuse',
         longDescription: 'BNB Smart Chain est une blockchain haute performance compatible EVM avec des frais de transaction très bas.',
@@ -131,7 +131,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
     {
         name: 'Monad Testnet',
         symbol: 'MON',
-        slug: 'monad',
+        slug: BlockchainSlug.MONAD,
         color: '#627EEA',
         description: 'La blockchain EVM L1 aux 10k TPS',
         longDescription: 'Monad est une blockchain Layer 1 compatible EVM qui promet 10 000 transactions par seconde avec une finalité instantanée.',
@@ -149,7 +149,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
     {
         name: 'MegaETH Testnet',
         symbol: 'ETH',
-        slug: 'megaeth',
+        slug: BlockchainSlug.MEGAETH,
         color: '#FF6B35',
         description: 'La blockchain EVM L2 aux 100k TPS',
         longDescription: 'MegaETH est une solution Layer 2 révolutionnaire qui vise 100 000 transactions par seconde tout en restant compatible EVM.',
