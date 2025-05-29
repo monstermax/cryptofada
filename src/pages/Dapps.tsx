@@ -263,7 +263,7 @@ export default function Dapps() {
             {/* Section d'ajout de dApp */}
             <div className="add-dapp-section">
                 <h3>Votre dApp n'est pas listée ?</h3>
-                <p>Soumettez votre application décentralisée pour qu'elle soit référencée sur ChainHub</p>
+                <p>Soumettez votre application décentralisée pour qu'elle soit référencée sur CryptoFada</p>
                 <button className="cta-btn primary">Soumettre une dApp</button>
             </div>
         </div>

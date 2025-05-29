@@ -113,10 +113,452 @@ body {
     margin: 0 auto;
 }
 
+/* Loading section */
+.loading-section {
+    text-align: center;
+    color: white;
+    padding: 4rem 2rem;
+}
+
+.loading-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Testnets page styles */
+.warning-section {
+    margin-bottom: 3rem;
+}
+
+.warning-card {
+    background: rgba(231, 76, 60, 0.1);
+    border: 2px solid rgba(231, 76, 60, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.warning-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.warning-content h3 {
+    color: #e74c3c;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.warning-content p {
+    color: white;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+/* Guides section */
+.guides-section {
+    margin-bottom: 4rem;
+}
+
+.guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.guide-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.guide-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.blockchain-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.blockchain-info h3 {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.blockchain-name {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.guide-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.difficulty-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.difficulty-badge.facile {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.difficulty-badge.moyen {
+    background: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+}
+
+.difficulty-badge.difficile {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+.airdrop-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.airdrop-badge.faible {
+    background: rgba(149, 165, 166, 0.2);
+    color: #95a5a6;
+}
+
+.airdrop-badge.moyen {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.airdrop-badge.élevé {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.guide-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.guide-meta {
+    margin-bottom: 1.5rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.meta-label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.meta-value {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.guide-requirements {
+    margin-bottom: 1.5rem;
+}
+
+.guide-requirements h4,
+.guide-steps h4,
+.guide-rewards h4 {
+    color: #2c3e50;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.guide-requirements ul {
+    list-style: none;
+    padding: 0;
+}
+
+.guide-requirements li {
+    padding: 0.25rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.guide-requirements li::before {
+    content: "✓ ";
+    color: #2ecc71;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.guide-steps {
+    margin-bottom: 1.5rem;
+}
+
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.step-number {
+    background: #667eea;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.step-item.more .step-number {
+    background: #95a5a6;
+}
+
+.step-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.step-title {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.step-desc {
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+.guide-rewards {
+    margin-bottom: 2rem;
+}
+
+.rewards-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.reward-tag {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.guide-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.guide-btn {
+    position: relative;
+}
+
+.guide-btn::before {
+    content: "📋";
+    margin-right: 0.5rem;
+}
+
+/* Performance info */
+.performance-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.perf-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.perf-label {
+    color: #666;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.perf-value {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.status-badge.inactive {
+    background: rgba(149, 165, 166, 0.2);
+    color: #95a5a6;
+}
+
+/* Tips section */
+.tips-section {
+    margin-bottom: 3rem;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.tip-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tip-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.tip-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.tip-card p {
+    opacity: 0.8;
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
+/* Section Les Bases */
+.basics-section {
+    margin-bottom: 5rem;
+}
+
+.basics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.basic-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.basic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.basic-card.cta-card {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+    border: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+.basic-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.basic-card h3 {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.basic-card p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.basic-card strong {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.basic-tip {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-left: 4px solid #667eea;
+}
+
+.cta-card .basic-tip {
+    background: rgba(255, 255, 255, 0.2);
+    color: #2c3e50;
+    border-left-color: #2c3e50;
+}
+
 /* Homepage Styles */
 .hero-section {
     text-align: center;
-    padding: 4rem 0;
+    padding: 1rem 0;
     color: white;
     margin-bottom: 4rem;
 }
@@ -943,6 +1385,19 @@ body {
 
     .page-header h1 {
         font-size: 2rem;
+    }
+
+    .basics-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .basic-card {
+        padding: 1.5rem;
+    }
+
+    .basic-icon {
+        font-size: 2.5rem;
     }
 
     .blockchain-grid {

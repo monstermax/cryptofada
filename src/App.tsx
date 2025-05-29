@@ -34,8 +34,8 @@ function Layout() {
                 <div className="header-content">
                     <div className="logo">
                         <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <h1>ChainHub</h1>
-                            <span className="tagline">Le lanceur de blockchains</span>
+                            <h1>CryptoFada</h1>
+                            <span className="tagline">Introduction à la blockchains</span>
                         </Link>
                     </div>
 
@@ -54,7 +54,7 @@ function Layout() {
             </main>
 
             <footer className="footer">
-                <p>&copy; 2025 ChainHub - Votre porte d'entrée vers l'écosystème blockchain</p>
+                <p>&copy; 2025 CryptoFada - Votre porte d'entrée vers l'écosystème blockchain</p>
             </footer>
         </div>
     )
