@@ -164,7 +164,7 @@ function BlockchainsSection({ blockchains }: BlockchainsSectionProps) {
     return (
         <section className="data-section">
             <div className="section-header">
-                <h2>🔗 Principales Blockchains</h2>
+                <h2>🔗 Principales Blockchains en 2025</h2>
                 <p>Les réseaux blockchain les plus utilisés et leur écosystème</p>
             </div>
 
@@ -230,7 +230,7 @@ function DappsSection({ dapps }: DappsSectionProps) {
     return (
         <section className="data-section">
             <div className="section-header">
-                <h2>🚀 Principales dApps</h2>
+                <h2>🚀 dApps populaires</h2>
                 <p>Les applications décentralisées les plus populaires</p>
             </div>
 

@@ -35,7 +35,7 @@ function Layout() {
                     <div className="logo">
                         <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <h1>CryptoFada</h1>
-                            <span className="tagline">Introduction à la blockchains</span>
+                            <span className="tagline">Introduction à la blockchain</span>
                         </Link>
                     </div>
 
