@@ -66,7 +66,7 @@ Les contributions sont les bienvenues ! Ouvrez une issue pour discuter des chang
 
 ## 📧 Contact
 
-- **Twitter** : [@cryptofada](https://twitter.com/cryptofada)
+- **Twitter** : [@yomax75](https://twitter.com/yomax75)
 - **Site** : [cryptofada.com](https://cryptofada.com)
 
 ---
