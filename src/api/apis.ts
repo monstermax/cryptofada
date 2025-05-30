@@ -145,6 +145,123 @@ export async function getHomepageDapps(): Promise<Dapp[]> {
 
 
 
+// === FONCTIONS TEMP (à migrer dans data) ===
+
+// Fonctions utilitaires
+export function getBlockchainTutorialDuration(slug: BlockchainSlug): string {
+    const blockchainsTutosDurations: Partial<Record<BlockchainSlug, string>> = {
+        'ethereum': '8 min',
+        'solana': '6 min',
+        'polygon': '5 min',
+        'arbitrum': '7 min',
+        'base': '5 min',
+        'bsc': '6 min',
+    };
+
+    return blockchainsTutosDurations[slug as keyof typeof blockchainsTutosDurations] || '6 min';
+}
+
+
+export function getBlockchainTutorialDifficulty(slug: BlockchainSlug): string {
+    const blockchainsTutosDifficulties: Partial<Record<BlockchainSlug, string>> = {
+        'ethereum': 'Intermédiaire',
+        'solana': 'Intermédiaire',
+        'polygon': 'Débutant',
+        'arbitrum': 'Intermédiaire',
+        'base': 'Débutant',
+        'bsc': 'Débutant',
+    };
+
+    return blockchainsTutosDifficulties[slug as keyof typeof blockchainsTutosDifficulties] || 'Débutant';
+}
+
+
+export function getBlockchainStartingCost(slug: BlockchainSlug): string {
+    const blockchainsCosts: Partial<Record<BlockchainSlug, string>> = {
+        'ethereum': '~50€ pour commencer',
+        'solana': '~5€ pour commencer',
+        'polygon': '~1€ pour commencer',
+        'arbitrum': '~10€ pour commencer',
+        'base': '~5€ pour commencer',
+        'bsc': '~2€ pour commencer',
+    };
+
+    return blockchainsCosts[slug as keyof typeof blockchainsCosts] || '~5€ pour commencer';
+}
+
+
+export function getBlockchainLearningGoals(slug: BlockchainSlug): string[] {
+    const baseGoals = [
+        'Installer et configurer le wallet',
+        'Obtenir vos premiers tokens',
+        'Effectuer votre première transaction',
+    ];
+
+    const blockchainsSpecificGoals: Partial<Record<BlockchainSlug, string[]>> = {
+        'ethereum': [...baseGoals, 'Comprendre les frais de gas', 'Utiliser les dApps principales'],
+        'solana': [...baseGoals, 'Comprendre les frais SOL', 'Découvrir l\'écosystème Solana'],
+        'polygon': [...baseGoals, 'Bridge depuis Ethereum', 'Profiter des frais réduits'],
+        'arbitrum': [...baseGoals, 'Bridge depuis Ethereum', 'Utiliser Arbitrum One'],
+        'base': [...baseGoals, 'Découvrir l\'écosystème Coinbase', 'Comprendre les Layer 2'],
+        'bsc': [...baseGoals, 'Comprendre BNB Smart Chain', 'Utiliser PancakeSwap'],
+    };
+
+    return blockchainsSpecificGoals[slug as keyof typeof blockchainsSpecificGoals] || baseGoals;
+}
+
+
+export function getBlockchainPrerequisites(slug: BlockchainSlug): string[] {
+    const base = ['Ordinateur ou smartphone', 'Connexion internet']
+
+    if (slug === 'solana') {
+        return [...base, 'Wallet Phantom recommandé'];
+    }
+
+    return [...base, 'Wallet MetaMask recommandé'];
+}
+
+
+export function getBlockchainWalletName(slug: BlockchainSlug): string[] {
+    const blockchainsWallets: Partial<Record<BlockchainSlug, string[]>> = {
+        'ethereum': ['MetaMask', 'Rabby'],
+        'solana': ['Phantom'],
+        'sui': ['Phantom'],
+        'polygon': ['MetaMask', 'Rabby'],
+        'arbitrum': ['MetaMask', 'Rabby'],
+        'base': ['MetaMask', 'Rabby'],
+        'bsc': ['MetaMask', 'Rabby'],
+        'fantom': ['MetaMask', 'Rabby'],
+        'avalanche': ['MetaMask', 'Rabby'],
+        'sonic': ['MetaMask', 'Rabby'],
+        'abstract': ['MetaMask', 'Rabby'],
+        'optimism': ['MetaMask', 'Rabby'],
+        'berachain': ['MetaMask', 'Rabby'],
+        'monad': ['MetaMask', 'Rabby', 'Phantom'],
+        'megaeth': ['MetaMask', 'Rabby'],
+        'bitcoin': ['Electrum'],
+        'ton': ['TonKeeper', 'OpenMask'],
+        'tron': ['CakeWallet'],
+    };
+
+    return blockchainsWallets[slug as keyof typeof blockchainsWallets] || [];
+}
+
+
+export function getBlockchainPath(slug: BlockchainSlug): string[] {
+    const blockchainsPaths: Partial<Record<BlockchainSlug, string[]>> = {
+        'polygon': ['Je débute', 'Économique'],
+        'base': ['Je débute', 'Performance'],
+        'bsc': ['Je débute', 'Économique'],
+        'ethereum': ['Performance'],
+        'solana': ['Performance'],
+        'arbitrum': ['Performance', 'Économique'],
+    };
+
+    return blockchainsPaths[slug as keyof typeof blockchainsPaths] || []
+}
+
+
+
 // === FONCTIONS MISC ===
 
 

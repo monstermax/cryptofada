@@ -267,7 +267,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
             twitter: 'https://x.com/berachain',
         },
         networks: [
-            { name: 'Berachain Testnet', isMainnet: false, active: true, launched: '2024' },
+            { name: 'Berachain', isMainnet: true, active: true, launched: '2025' },
         ],
     },
     {
@@ -288,7 +288,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
             twitter: 'https://x.com/SonicLabs',
         },
         networks: [
-            { name: 'Sonic Testnet', isMainnet: false, active: true, launched: '2024' },
+            { name: 'Sonic', isMainnet: true, active: true, launched: '2025' },
         ],
     },
     {
@@ -309,7 +309,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
             twitter: 'https://x.com/AbstractChain',
         },
         networks: [
-            { name: 'Abstract Testnet', isMainnet: false, active: true, launched: '2024' },
+            { name: 'Abstract', isMainnet: true, active: true, launched: '2025' },
         ],
     },
 
@@ -409,7 +409,7 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
             twitter: 'https://x.com/HyperliquidX',
         },
         networks: [
-            { name: 'Hyperliquid Testnet', isMainnet: false, active: true, launched: '2024' },
+            { name: 'Hyperliquid', isMainnet: true, active: true, launched: '2023' },
         ],
     },
 ];

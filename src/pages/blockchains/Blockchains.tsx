@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { blockchainHasAirdrop } from '../../api/apis'
+import { blockchainHasAirdrop, getBlockchainLearningGoals, getBlockchainPrerequisites, getBlockchainStartingCost, getBlockchainTutorialDifficulty, getBlockchainTutorialDuration, getBlockchainWalletName } from '../../api/apis'
 import { useBlockchains } from '../../hooks/useBlockchain'
 
 import type { BlockchainMetrics } from '../../types/blockchains_types'
@@ -21,12 +21,12 @@ export default function Blockchains() {
     const blockchainsWithTutorials = blockchainsHavingMainnet.map(blockchain => ({
         ...blockchain,
         tutorial: {
-            duration: getTutorialDuration(blockchain.slug),
-            difficulty: getTutorialDifficulty(blockchain.slug),
-            startingCost: getStartingCost(blockchain.slug),
-            learningGoals: getLearningGoals(blockchain.slug),
-            prerequisites: getPrerequisites(blockchain.slug),
-            walletName: getWalletName(blockchain.slug),
+            duration: getBlockchainTutorialDuration(blockchain.slug),
+            difficulty: getBlockchainTutorialDifficulty(blockchain.slug),
+            startingCost: getBlockchainStartingCost(blockchain.slug),
+            learningGoals: getBlockchainLearningGoals(blockchain.slug),
+            prerequisites: getBlockchainPrerequisites(blockchain.slug),
+            walletNames: getBlockchainWalletName(blockchain.slug),
             videoUrl: `/videos/${blockchain.slug}-setup.mp4`,
             thumbnailUrl: `/thumbnails/${blockchain.slug}-wallet.jpg`,
         }
@@ -273,7 +273,9 @@ export default function Blockchains() {
 
                                 <div className="wallet-info">
                                     <h4>Wallet recommandé :</h4>
-                                    <span className="wallet-name">{blockchain.tutorial.walletName}</span>
+                                    {blockchain.tutorial.walletNames.map(walletName => (
+                                        <span className="wallet-name">{walletName}</span>
+                                    ))}
                                 </div>
                             </div>
 
@@ -307,99 +309,3 @@ export default function Blockchains() {
     )
 }
 
-
-// Fonctions utilitaires (à déplacer dans apis.ts plus tard)
-function getTutorialDuration(slug: BlockchainSlug): string {
-    const durations = {
-        'ethereum': '8 min',
-        'solana': '6 min',
-        'polygon': '5 min',
-        'arbitrum': '7 min',
-        'base': '5 min',
-        'bsc': '6 min'
-    }
-    return durations[slug as keyof typeof durations] || '6 min'
-}
-
-
-function getTutorialDifficulty(slug: BlockchainSlug): string {
-    const difficulties = {
-        'ethereum': 'Intermédiaire',
-        'solana': 'Intermédiaire',
-        'polygon': 'Débutant',
-        'arbitrum': 'Intermédiaire',
-        'base': 'Débutant',
-        'bsc': 'Débutant'
-    }
-    return difficulties[slug as keyof typeof difficulties] || 'Débutant'
-}
-
-
-function getStartingCost(slug: BlockchainSlug): string {
-    const costs = {
-        'ethereum': '~50€ pour commencer',
-        'solana': '~5€ pour commencer',
-        'polygon': '~1€ pour commencer',
-        'arbitrum': '~10€ pour commencer',
-        'base': '~5€ pour commencer',
-        'bsc': '~2€ pour commencer'
-    }
-    return costs[slug as keyof typeof costs] || '~5€ pour commencer'
-}
-
-
-function getLearningGoals(slug: BlockchainSlug): string[] {
-    const baseGoals = [
-        'Installer et configurer le wallet',
-        'Obtenir vos premiers tokens',
-        'Effectuer votre première transaction'
-    ]
-
-    const specificGoals = {
-        'ethereum': [...baseGoals, 'Comprendre les frais de gas', 'Utiliser les dApps principales'],
-        'solana': [...baseGoals, 'Comprendre les frais SOL', 'Découvrir l\'écosystème Solana'],
-        'polygon': [...baseGoals, 'Bridge depuis Ethereum', 'Profiter des frais réduits'],
-        'arbitrum': [...baseGoals, 'Bridge depuis Ethereum', 'Utiliser Arbitrum One'],
-        'base': [...baseGoals, 'Découvrir l\'écosystème Coinbase', 'Comprendre les Layer 2'],
-        'bsc': [...baseGoals, 'Comprendre BNB Smart Chain', 'Utiliser PancakeSwap']
-    }
-
-    return specificGoals[slug as keyof typeof specificGoals] || baseGoals
-}
-
-
-function getPrerequisites(slug: BlockchainSlug): string[] {
-    const base = ['Ordinateur ou smartphone', 'Connexion internet']
-
-    if (slug === 'solana') {
-        return [...base, 'Wallet Phantom recommandé']
-    }
-
-    return [...base, 'Wallet MetaMask recommandé']
-}
-
-
-function getWalletName(slug: BlockchainSlug): string {
-    const wallets = {
-        'ethereum': 'MetaMask',
-        'solana': 'Phantom',
-        'polygon': 'MetaMask',
-        'arbitrum': 'MetaMask',
-        'base': 'MetaMask',
-        'bsc': 'MetaMask'
-    }
-    return wallets[slug as keyof typeof wallets] || 'MetaMask'
-}
-
-
-function getBlockchainPath(slug: BlockchainSlug): string[] {
-    const paths = {
-        'polygon': ['Je débute', 'Économique'],
-        'base': ['Je débute', 'Performance'],
-        'bsc': ['Je débute', 'Économique'],
-        'ethereum': ['Performance'],
-        'solana': ['Performance'],
-        'arbitrum': ['Performance', 'Économique']
-    }
-    return paths[slug as keyof typeof paths] || []
-}
