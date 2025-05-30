@@ -1,22 +1,21 @@
 // types/dapps_types.ts
 
-import type { BlockchainSlug } from "./blockchains_types";
+import { BlockchainSlug } from "../data/blockchains_data";
+import { DappCategorySlug } from "../data/dapps_categories_data";
+import { DappSlug } from "../data/dapps_data";
 
 
-export enum DappSlug {
-    UNISWAP = 'uniswap',
-    AAVE = 'aave',
-    LIDO = 'lido',
-    PANCAKESWAP = 'pancakeswap',
-    RAYDIUM = 'raydium',
-    COMPOUND = 'compound',
-}
+
+export type DappCategory = {
+    name: string,
+    slug: DappCategorySlug,
+};
 
 
 export interface Dapp {
     name: string;
     slug: DappSlug;
-    category: 'DEX' | 'Lending' | 'Staking' | 'Gaming' | 'NFT' | 'Bridge' | 'Yield' | 'Other';
+    category: DappCategorySlug;
     description: string;
     longDescription?: string;
     blockchains: BlockchainSlug[]; // slugs des blockchains supportées
@@ -30,15 +29,16 @@ export interface Dapp {
     founded: string;
     team: string;
     token?: string;
-}
+};
 
 
 export interface DappMetrics {
+    dapp: DappSlug,
     tvl: string;
     users24h: string;
     volume24h: string;
     transactions24h?: string;
     fees24h?: string;
     totalUsers?: string;
-}
+};
 

@@ -3,33 +3,23 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { dappHasAirdrop, getBlockchainNameBySlug, getDapps } from '../../apis'
+import { dappHasAirdrop, getDapps } from '../../api/apis'
+import { BlockchainSlug } from '../../data/blockchains_data'
+import { useDapps, useDappsCategories } from '../../hooks/useDapp'
+import { useBlockchains } from '../../hooks/useBlockchain'
 
-import type { Dapp } from '../../types/dapps_types'
+import type { DappCategorySlug } from '../../data/dapps_categories_data'
 
 
 
 export default function Dapps() {
-    const [dapps, setDapps] = useState<Dapp[]>([])
-    const [loading, setLoading] = useState(true)
-    const [selectedCategory, setSelectedCategory] = useState('Tous')
+    const { blockchains } = useBlockchains();
+    const { dapps, setDapps, loading } = useDapps();
+    const { dappsCategories } = useDappsCategories();
+
+    const [selectedCategory, setSelectedCategory] = useState<DappCategorySlug | null>(null)
     const [selectedDifficulty, setSelectedDifficulty] = useState('Tous')
-    const [selectedBlockchain, setSelectedBlockchain] = useState('Tous')
-
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const dappsData = await getDapps()
-                setDapps(dappsData)
-            } catch (error) {
-                console.error('Erreur lors du chargement des dApps:', error)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        loadData()
-    }, [])
+    const [selectedBlockchain, setSelectedBlockchain] = useState<BlockchainSlug | null>(null)
 
     // Données enrichies avec infos tutoriels (à déplacer dans apis.ts plus tard)
     const dappsWithTutorials = dapps.map(dapp => ({
@@ -44,16 +34,25 @@ export default function Dapps() {
         }
     }))
 
-    const categories = ['Tous', 'DEX', 'Lending', 'Staking', 'Gaming']
-    const difficulties = ['Tous', 'Débutant', 'Intermédiaire', 'Avancé']
-    const blockchains = ['Tous', 'Ethereum', 'Solana', 'Polygon', 'Arbitrum', 'Base', 'BSC']
+    const filterCategories: DappCategorySlug[] = dappsCategories.map(cat => cat.slug);
+    const filterDifficulties: string[] = ['Débutant', 'Intermédiaire', 'Avancé']
+    const filterBlockchains: BlockchainSlug[] = blockchains.map(chain => chain.slug);
+
+
+    const getBlockchainNameBySlug = (slug: BlockchainSlug) => {
+        const blockchain = blockchains.find(blockchain => blockchain.slug == slug);
+        return blockchain?.name || slug;
+    }
+
 
     // Filtrage
     const filteredDapps = dappsWithTutorials.filter(dapp => {
-        const categoryMatch = selectedCategory === 'Tous' || dapp.category === selectedCategory
-        const difficultyMatch = selectedDifficulty === 'Tous' || dapp.tutorial.difficulty === selectedDifficulty
-        const blockchainMatch = selectedBlockchain === 'Tous' ||
-            dapp.blockchains.some(chain => getBlockchainNameBySlug(chain) === selectedBlockchain)
+        const categoryMatch = selectedCategory === null || dapp.category === selectedCategory;
+
+        const difficultyMatch = selectedDifficulty === 'Tous' || dapp.tutorial.difficulty === selectedDifficulty;
+
+        const blockchainMatch = selectedBlockchain === null ||
+            dapp.blockchains.some(chainSlug => chainSlug === selectedBlockchain)
 
         return categoryMatch && difficultyMatch && blockchainMatch
     })
@@ -126,10 +125,12 @@ export default function Dapps() {
                     <label>Catégorie:</label>
                     <select
                         className="filter-select"
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        value={selectedCategory as DappCategorySlug}
+                        onChange={(e) => setSelectedCategory(e.target.value as DappCategorySlug)}
                     >
-                        {categories.map(cat => (
+                        <option value="">Toutes</option>
+
+                        {filterCategories.map(cat => (
                             <option key={cat} value={cat}>{cat}</option>
                         ))}
                     </select>
@@ -142,7 +143,9 @@ export default function Dapps() {
                         value={selectedDifficulty}
                         onChange={(e) => setSelectedDifficulty(e.target.value)}
                     >
-                        {difficulties.map(diff => (
+                        <option value="">Toutes</option>
+
+                        {filterDifficulties.map(diff => (
                             <option key={diff} value={diff}>{diff}</option>
                         ))}
                     </select>
@@ -152,11 +155,13 @@ export default function Dapps() {
                     <label>Blockchain:</label>
                     <select
                         className="filter-select"
-                        value={selectedBlockchain}
-                        onChange={(e) => setSelectedBlockchain(e.target.value)}
+                        value={selectedBlockchain as BlockchainSlug}
+                        onChange={(e) => setSelectedBlockchain(e.target.value as BlockchainSlug)}
                     >
-                        {blockchains.map(chain => (
-                            <option key={chain} value={chain}>{chain}</option>
+                        <option value="">Toutes</option>
+
+                        {filterBlockchains.map(chainSlug => (
+                            <option key={chainSlug} value={chainSlug}>{getBlockchainNameBySlug(chainSlug)}</option>
                         ))}
                     </select>
                 </div>
@@ -277,69 +282,77 @@ export default function Dapps() {
     )
 }
 
+
 // Fonctions utilitaires (à déplacer dans apis.ts plus tard)
-function getDurationByCategory(category: string): string {
-    const durations = {
-        'DEX': '4 min',
-        'Lending': '6 min',
-        'Staking': '5 min',
-        'Gaming': '8 min',
-        'NFT': '3 min',
-        'Bridge': '4 min',
-        'Yield': '7 min'
-    }
+function getDurationByCategory(category: DappCategorySlug): string {
+    const durations: Partial<Record<DappCategorySlug, string>> = {
+        'dex': '4 min',
+        'lending': '6 min',
+        'staking': '5 min',
+        'gaming': '8 min',
+        'nft': '3 min',
+        'bridge': '4 min',
+        'yield': '7 min'
+    };
+
     return durations[category as keyof typeof durations] || '5 min'
 }
 
-function getDifficultyByCategory(category: string): string {
-    const difficulties = {
-        'DEX': 'Débutant',
-        'Lending': 'Intermédiaire',
-        'Staking': 'Intermédiaire',
-        'Gaming': 'Avancé',
-        'NFT': 'Débutant',
-        'Bridge': 'Intermédiaire',
-        'Yield': 'Avancé'
-    }
-    return difficulties[category as keyof typeof difficulties] || 'Débutant'
+
+function getDifficultyByCategory(category: DappCategorySlug): string {
+    const difficulties: Partial<Record<DappCategorySlug, string>> = {
+        'dex': 'Débutant',
+        'lending': 'Intermédiaire',
+        'staking': 'Intermédiaire',
+        'gaming': 'Avancé',
+        'nft': 'Débutant',
+        'bridge': 'Intermédiaire',
+        'yield': 'Avancé'
+    };
+
+    return difficulties[category as keyof typeof difficulties] || 'Débutant';
 }
 
-function getPrerequisitesByBlockchain(blockchains: string[]): string[] {
+
+function getPrerequisitesByBlockchain(blockchains: BlockchainSlug[]): string[] {
     const prerequisites = ['Wallet MetaMask installé']
 
-    if (blockchains.includes('solana')) {
+    if (blockchains.includes(BlockchainSlug.SOLANA)) {
         prerequisites.push('Wallet Phantom (pour Solana)')
     }
-    if (blockchains.includes('ethereum')) {
+    if (blockchains.includes(BlockchainSlug.ETHEREUM)) {
         prerequisites.push('Quelques ETH pour les frais')
     }
 
-    return prerequisites
+    return prerequisites;
 }
 
-function getLearningGoalsByCategory(category: string): string[] {
-    const goals = {
-        'DEX': [
+
+function getLearningGoalsByCategory(category: DappCategorySlug): string[] {
+    const goals: Partial<Record<DappCategorySlug, string[]>> = {
+        'dex': [
             'Comment connecter votre wallet',
             'Échanger des tokens en toute sécurité',
             'Comprendre le slippage et les frais'
         ],
-        'Lending': [
+        'lending': [
             'Déposer des crypto-monnaies',
             'Emprunter avec des garanties',
             'Comprendre les taux d\'intérêt'
         ],
-        'Staking': [
+        'staking': [
             'Staker vos tokens',
             'Calculer les récompenses',
             'Gérer les risques'
         ],
-        'Gaming': [
+        'gaming': [
             'Créer un compte joueur',
             'Acheter/vendre des NFTs',
             'Comprendre le play-to-earn'
-        ]
-    }
-    return goals[category as keyof typeof goals] || ['Utiliser la dApp efficacement']
+        ],
+    };
+
+    return goals[category as keyof typeof goals] || ['Utiliser la dApp efficacement'];
 }
+
 

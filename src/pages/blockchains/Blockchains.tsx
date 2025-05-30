@@ -3,36 +3,22 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { blockchainHasAirdrop, getBlockchains } from '../../apis'
+import { blockchainHasAirdrop } from '../../api/apis'
+import { useBlockchains } from '../../hooks/useBlockchain'
 
-import type { Blockchain, BlockchainMetrics } from '../../types/blockchains_types'
+import type { BlockchainMetrics } from '../../types/blockchains_types'
+import type { BlockchainSlug } from '../../data/blockchains_data'
 
 
 export default function Blockchains() {
-    const [blockchains, setBlockchains] = useState<Blockchain[]>([])
-    const [loading, setLoading] = useState(true)
+    const { blockchains, setBlockchains, loading } = useBlockchains();
     const [selectedPath, setSelectedPath] = useState('Tous')
     const [selectedDifficulty, setSelectedDifficulty] = useState('Tous')
 
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const blockchainsData = await getBlockchains()
-                setBlockchains(blockchainsData)
-
-            } catch (error) {
-                console.error('Erreur lors du chargement des blockchains:', error)
-
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        loadData()
-    }, [])
+    const blockchainsHavingMainnet = blockchains.filter(b => b.networks.some(network => network.isMainnet));
 
     // Données enrichies avec infos tutoriels
-    const blockchainsWithTutorials = blockchains.map(blockchain => ({
+    const blockchainsWithTutorials = blockchainsHavingMainnet.map(blockchain => ({
         ...blockchain,
         tutorial: {
             duration: getTutorialDuration(blockchain.slug),
@@ -323,7 +309,7 @@ export default function Blockchains() {
 
 
 // Fonctions utilitaires (à déplacer dans apis.ts plus tard)
-function getTutorialDuration(slug: string): string {
+function getTutorialDuration(slug: BlockchainSlug): string {
     const durations = {
         'ethereum': '8 min',
         'solana': '6 min',
@@ -336,7 +322,7 @@ function getTutorialDuration(slug: string): string {
 }
 
 
-function getTutorialDifficulty(slug: string): string {
+function getTutorialDifficulty(slug: BlockchainSlug): string {
     const difficulties = {
         'ethereum': 'Intermédiaire',
         'solana': 'Intermédiaire',
@@ -349,7 +335,7 @@ function getTutorialDifficulty(slug: string): string {
 }
 
 
-function getStartingCost(slug: string): string {
+function getStartingCost(slug: BlockchainSlug): string {
     const costs = {
         'ethereum': '~50€ pour commencer',
         'solana': '~5€ pour commencer',
@@ -362,7 +348,7 @@ function getStartingCost(slug: string): string {
 }
 
 
-function getLearningGoals(slug: string): string[] {
+function getLearningGoals(slug: BlockchainSlug): string[] {
     const baseGoals = [
         'Installer et configurer le wallet',
         'Obtenir vos premiers tokens',
@@ -382,7 +368,7 @@ function getLearningGoals(slug: string): string[] {
 }
 
 
-function getPrerequisites(slug: string): string[] {
+function getPrerequisites(slug: BlockchainSlug): string[] {
     const base = ['Ordinateur ou smartphone', 'Connexion internet']
 
     if (slug === 'solana') {
@@ -393,7 +379,7 @@ function getPrerequisites(slug: string): string[] {
 }
 
 
-function getWalletName(slug: string): string {
+function getWalletName(slug: BlockchainSlug): string {
     const wallets = {
         'ethereum': 'MetaMask',
         'solana': 'Phantom',
@@ -406,7 +392,7 @@ function getWalletName(slug: string): string {
 }
 
 
-function getBlockchainPath(slug: string): string[] {
+function getBlockchainPath(slug: BlockchainSlug): string[] {
     const paths = {
         'polygon': ['Je débute', 'Économique'],
         'base': ['Je débute', 'Performance'],

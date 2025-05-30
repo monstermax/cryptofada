@@ -95,7 +95,8 @@ const dappsByBlockchain = {
 
 
 export default function BlockchainDapps() {
-    const { blockchain, loading, slug } = useBlockchain()
+    const { slug } = useParams<{ slug: string }>();
+    const { blockchain, loading } = useBlockchain(slug)
     const dapps = dappsByBlockchain[slug as keyof typeof dappsByBlockchain] || []
 
     if (!blockchain && !loading) {
@@ -265,7 +266,6 @@ export default function BlockchainDapps() {
                 <div className="empty-state">
                     <h3>Aucune dApp référencée</h3>
                     <p>Cette blockchain n'a pas encore de dApps référencées dans notre base de données.</p>
-                    <button className="cta-btn primary">Soumettre une dApp</button>
                 </div>
             )}
         </div>

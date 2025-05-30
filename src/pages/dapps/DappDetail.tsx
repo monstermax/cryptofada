@@ -1,16 +1,28 @@
 // pages/dapps/DappDetail.tsx
 
-import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 
+import { useBlockchains } from '../../hooks/useBlockchain'
 import { useDapp } from '../../hooks/useDapp'
-import { getBlockchainBySlug } from '../../apis'
-import type { Blockchain, BlockchainSlug } from '../../types/blockchains_types'
-import type { DappMetrics } from '../../types/dapps_types'
+import { useDappMetrics } from '../../hooks/useDappMetrics'
+
+import type { BlockchainSlug } from '../../data/blockchains_data'
+import type { DappSlug } from '../../data/dapps_data'
 
 
 export default function DappDetail() {
-    const { dapp, loading, slug } = useDapp()
+    const { slug } = useParams<{ slug: DappSlug }>();
+    const { dapp, loading } = useDapp(slug);
+    const { dappMetrics } = useDappMetrics(slug);
+    const { blockchains } = useBlockchains();
+
+    const dappMetric = dappMetrics[0];
+
+    const getBlockchainBySlugSync = (slug: BlockchainSlug) => {
+        const blockchain = blockchains.find(blockchain => blockchain.slug == slug);
+        return blockchain;
+    }
+
 
     if (!dapp && !loading) {
         return (
@@ -37,9 +49,6 @@ export default function DappDetail() {
     }
 
     if (!dapp) return null;
-
-    const dappMetrics: DappMetrics | null = null as DappMetrics | null;
-
 
     return (
         <div className="page">
@@ -97,7 +106,7 @@ export default function DappDetail() {
                 <h2>Blockchains Supportées</h2>
                 <div className="blockchain-list">
                     {dapp.blockchains.map((blockchainSlug: BlockchainSlug) => {
-                        const blockchain = null as Blockchain | null; // TODO ; // await getBlockchainBySlug(blockchainSlug);
+                        const blockchain = getBlockchainBySlugSync(blockchainSlug);
 
                         if (!blockchain) {
                             return (
@@ -126,27 +135,27 @@ export default function DappDetail() {
             <div className="metrics-grid">
                 <div className="metric-card">
                     <div className="metric-label">TVL Total</div>
-                    <div className="metric-value">{dappMetrics ? dappMetrics.tvl : '-'}</div>
+                    <div className="metric-value">{dappMetric ? dappMetric.tvl : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Utilisateurs 24h</div>
-                    <div className="metric-value">{dappMetrics ? dappMetrics.users24h : '-'}</div>
+                    <div className="metric-value">{dappMetric ? dappMetric.users24h : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Volume 24h</div>
-                    <div className="metric-value">{dappMetrics ? dappMetrics.volume24h : '-'}</div>
+                    <div className="metric-value">{dappMetric ? dappMetric.volume24h : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Transactions 24h</div>
-                    <div className="metric-value">{dappMetrics ? dappMetrics.transactions24h : '-'}</div>
+                    <div className="metric-value">{dappMetric ? dappMetric.transactions24h : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Frais générés 24h</div>
-                    <div className="metric-value">{dappMetrics ? dappMetrics.fees24h : '-'}</div>
+                    <div className="metric-value">{dappMetric ? dappMetric.fees24h : '-'}</div>
                 </div>
                 <div className="metric-card">
                     <div className="metric-label">Utilisateurs Total</div>
-                    <div className="metric-value">{dappMetrics ? dappMetrics.totalUsers : '-'}</div>
+                    <div className="metric-value">{dappMetric ? dappMetric.totalUsers : '-'}</div>
                 </div>
             </div>
 

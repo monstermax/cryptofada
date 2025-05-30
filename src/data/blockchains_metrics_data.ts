@@ -1,11 +1,13 @@
+// data/blockchains_metrics_data.ts
 
 import { BlockchainSlug } from "./blockchains_data";
 
 import type { BlockchainMetrics } from "../types/blockchains_types";
 
 
-export const BLOCKCHAINS_METRICS: Partial<Record<BlockchainSlug, BlockchainMetrics>> = {
-    ethereum: {
+export const BLOCKCHAINS_METRICS: BlockchainMetrics[] = [
+    {
+        blockchain: BlockchainSlug.ETHEREUM,
         tvl: '$45.2B',
         marketCap: '$280.5B',
         price: '$2,340',
@@ -15,7 +17,8 @@ export const BLOCKCHAINS_METRICS: Partial<Record<BlockchainSlug, BlockchainMetri
         blockTime: '12s',
         validators: '1,000,000+'
     },
-    solana: {
+    {
+        blockchain: BlockchainSlug.SOLANA,
         tvl: '$8.7B',
         marketCap: '$45.8B',
         price: '$95.20',
@@ -25,7 +28,8 @@ export const BLOCKCHAINS_METRICS: Partial<Record<BlockchainSlug, BlockchainMetri
         blockTime: '0.4s',
         validators: '1,800+'
     },
-    polygon: {
+    {
+        blockchain: BlockchainSlug.POLYGON,
         tvl: '$1.2B',
         marketCap: '$3.2B',
         price: '$0.85',
@@ -35,7 +39,8 @@ export const BLOCKCHAINS_METRICS: Partial<Record<BlockchainSlug, BlockchainMetri
         blockTime: '2s',
         validators: '100+'
     },
-    arbitrum: {
+    {
+        blockchain: BlockchainSlug.ARBITRUM,
         tvl: '$2.8B',
         marketCap: '$2.1B',
         price: '$0.92',
@@ -45,7 +50,8 @@ export const BLOCKCHAINS_METRICS: Partial<Record<BlockchainSlug, BlockchainMetri
         blockTime: '0.25s',
         validators: '1'
     },
-    base: {
+    {
+        blockchain: BlockchainSlug.BASE,
         tvl: '$1.8B',
         marketCap: '-',
         price: '-',
@@ -55,7 +61,8 @@ export const BLOCKCHAINS_METRICS: Partial<Record<BlockchainSlug, BlockchainMetri
         blockTime: '2s',
         validators: '1'
     },
-    bsc: {
+    {
+        blockchain: BlockchainSlug.BSC,
         tvl: '$3.1B',
         marketCap: '$42.8B',
         price: '$285',
@@ -65,7 +72,8 @@ export const BLOCKCHAINS_METRICS: Partial<Record<BlockchainSlug, BlockchainMetri
         blockTime: '3s',
         validators: '21'
     },
-    monad: {
+    {
+        blockchain: BlockchainSlug.MONAD,
         tvl: '$0',
         marketCap: '$0',
         price: '$0',
@@ -75,7 +83,8 @@ export const BLOCKCHAINS_METRICS: Partial<Record<BlockchainSlug, BlockchainMetri
         blockTime: '0.1s',
         validators: '500+'
     },
-    megaeth: {
+    {
+        blockchain: BlockchainSlug.MEGAETH,
         tvl: '$0',
         marketCap: '$0',
         price: '$0',
@@ -85,5 +94,6 @@ export const BLOCKCHAINS_METRICS: Partial<Record<BlockchainSlug, BlockchainMetri
         blockTime: '0.05s',
         validators: '1'
     },
-}
+];
+
 

@@ -3,21 +3,36 @@
 import type { Blockchain, BlockchainMetrics } from "../types/blockchains_types";
 
 
+// Liste unique des blockchains (mainnet + testnet)
+
 export enum BlockchainSlug {
+    // EVM
     ETHEREUM = 'ethereum',
     BSC = 'bsc',
-    SOLANA = 'solana',
     POLYGON = 'polygon',
     BASE = 'base',
+    ARBITRUM = 'arbitrum',
+    OPTIMISM = 'optimism',
+    AVALANCHE = 'avalanche',
+    FANTOM = 'fantom',
+    BITCOIN = 'bitcoin',
+    TRON = 'tron',
     MONAD = 'monad',
     MEGAETH = 'megaeth',
-    ARBITRUM = 'arbitrum',
+    BERACHAIN = 'berachain',
+    SONIC = 'sonic',
+    ABSTRACT = 'abstract',
+
+    // OTHER
+    SOLANA = 'solana',
+    SUI = 'sui',
+    TON = 'ton',
+    HYPERLIQUID = 'hyperliquid',
 }
 
 
-// Liste unique des blockchains (mainnet + testnet)
 export const ALL_BLOCKCHAINS: Blockchain[] = [
-    // MAINNETS
+    // EVM MAINNETS
     {
         name: 'Ethereum',
         symbol: 'ETH',
@@ -27,32 +42,15 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
         longDescription: 'Ethereum est la plateforme blockchain programmable leader mondiale, permettant aux développeurs de créer des applications décentralisées.',
         category: 'Layer 1',
         consensus: 'Proof of Stake',
-        launched: '2015',
         links: {
             website: 'https://ethereum.org',
             whitepaper: 'https://ethereum.org/whitepaper/',
             github: 'https://github.com/ethereum',
             explorer: 'https://etherscan.io',
         },
-        network: 'mainnet'
-    },
-    {
-        name: 'Solana',
-        symbol: 'SOL',
-        slug: BlockchainSlug.SOLANA,
-        color: '#9945FF',
-        description: 'Blockchain haute performance',
-        longDescription: 'Solana est une blockchain haute performance conçue pour les applications décentralisées à grande échelle.',
-        category: 'Layer 1',
-        consensus: 'Proof of History + Proof of Stake',
-        launched: '2020',
-        links: {
-            website: 'solana.com',
-            whitepaper: 'https://solana.com/solana-whitepaper.pdf',
-            github: 'https://github.com/solana-labs',
-            explorer: 'https://explorer.solana.com',
-        },
-        network: 'mainnet'
+        networks: [
+            { name: 'mainnet', isMainnet: true, active: true, launched: '2015' },
+        ],
     },
     {
         name: 'Polygon',
@@ -63,14 +61,15 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
         longDescription: 'Polygon est une solution de mise à l\'échelle pour Ethereum qui offre des transactions rapides et peu coûteuses.',
         category: 'Layer 2',
         consensus: 'Proof of Stake',
-        launched: '2017',
         links: {
-            website: 'polygon.technology',
+            website: 'https://polygon.technology',
             whitepaper: 'https://polygon.technology/papers/pol-whitepaper',
             github: 'https://github.com/maticnetwork',
             explorer: 'https://polygonscan.com',
         },
-        network: 'mainnet'
+        networks: [
+            { name: 'mainnet', isMainnet: true, active: true, launched: '2017' },
+        ],
     },
     {
         name: 'Arbitrum',
@@ -81,14 +80,34 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
         longDescription: 'Arbitrum est une solution de Layer 2 optimiste qui permet des transactions Ethereum rapides et peu coûteuses.',
         category: 'Layer 2',
         consensus: 'Optimistic Rollup',
-        launched: '2021',
         links: {
-            website: 'arbitrum.io',
+            website: 'https://arbitrum.io',
             whitepaper: 'https://arbitrum.io/whitepaper.pdf',
             github: 'https://github.com/OffchainLabs',
             explorer: 'https://arbiscan.io',
         },
-        network: 'mainnet'
+        networks: [
+            { name: 'mainnet', isMainnet: true, active: true, launched: '2021' },
+        ],
+    },
+    {
+        name: 'Optimism',
+        symbol: 'OP',
+        slug: BlockchainSlug.OPTIMISM,
+        color: '#FF0420',
+        description: 'Layer 2 optimiste populaire',
+        longDescription: 'Optimism est une solution Layer 2 optimiste qui améliore l\'expérience Ethereum avec des transactions rapides et économiques.',
+        category: 'Layer 2',
+        consensus: 'Optimistic Rollup',
+        links: {
+            website: 'https://optimism.io',
+            whitepaper: 'https://optimism.io/whitepaper',
+            github: 'https://github.com/ethereum-optimism',
+            explorer: 'https://optimistic.etherscan.io',
+        },
+        networks: [
+            { name: 'mainnet', isMainnet: true, active: true, launched: '2021' },
+        ],
     },
     {
         name: 'Base',
@@ -99,14 +118,15 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
         longDescription: 'Base est une solution Layer 2 développée par Coinbase, offrant un écosystème sécurisé et facile d\'accès.',
         category: 'Layer 2',
         consensus: 'Optimistic Rollup',
-        launched: '2023',
         links: {
-            website: 'base.org',
+            website: 'https://base.org',
             whitepaper: 'https://base.org/whitepaper',
             github: 'https://github.com/base-org',
             explorer: 'https://basescan.org',
         },
-        network: 'mainnet'
+        networks: [
+            { name: 'mainnet', isMainnet: true, active: true, launched: '2023' },
+        ],
     },
     {
         name: 'BNB Smart Chain',
@@ -117,19 +137,76 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
         longDescription: 'BNB Smart Chain est une blockchain haute performance compatible EVM avec des frais de transaction très bas.',
         category: 'Layer 1',
         consensus: 'Proof of Staked Authority',
-        launched: '2020',
         links: {
-            website: 'bnbchain.org',
+            website: 'https://bnbchain.org',
             whitepaper: 'https://github.com/bnb-chain/whitepaper',
             github: 'https://github.com/bnb-chain',
             explorer: 'https://bscscan.com',
+            docs: 'https://docs.bnbchain.org/',
         },
-        network: 'mainnet'
+        networks: [
+            { name: 'mainnet', isMainnet: true, active: true, launched: '2020' },
+        ],
     },
-
-    // TESTNETS
     {
-        name: 'Monad Testnet',
+        name: 'Avalanche',
+        symbol: 'AVAX',
+        slug: BlockchainSlug.AVALANCHE,
+        color: '#E84142',
+        description: 'Blockchain rapide et écologique',
+        longDescription: 'Avalanche est une plateforme blockchain ultra-rapide et écologique avec finalité quasi-instantanée.',
+        category: 'Layer 1',
+        consensus: 'Avalanche Consensus',
+        links: {
+            website: 'https://avax.network',
+            whitepaper: 'https://assets.website-files.com/5d80307810123f5ffbb34d6e/6009805681b416f34dcae012_Avalanche%20Consensus%20Whitepaper.pdf',
+            github: 'https://github.com/ava-labs',
+            explorer: 'https://snowtrace.io',
+        },
+        networks: [
+            { name: 'mainnet', isMainnet: true, active: true, launched: '2020' },
+        ],
+    },
+    {
+        name: 'Fantom',
+        symbol: 'FTM',
+        slug: BlockchainSlug.FANTOM,
+        color: '#1969FF',
+        description: 'Blockchain ultra-rapide et scalable',
+        longDescription: 'Fantom est une blockchain DAG haute performance avec des transactions quasi-instantanées et des frais très bas.',
+        category: 'Layer 1',
+        consensus: 'Lachesis aBFT',
+        links: {
+            website: 'https://fantom.foundation',
+            whitepaper: 'https://fantom.foundation/wp-content/uploads/2019/03/Fantom-Technical-Paper_ver-0.99.pdf',
+            github: 'https://github.com/Fantom-foundation',
+            explorer: 'https://ftmscan.com',
+        },
+        networks: [
+            { name: 'mainnet', isMainnet: true, active: true, launched: '2019' },
+        ],
+    },
+    {
+        name: 'TRON',
+        symbol: 'TRX',
+        slug: BlockchainSlug.TRON,
+        color: '#FF060A',
+        description: 'Blockchain pour le divertissement',
+        longDescription: 'TRON est une blockchain décentralisée qui vise à construire un système de divertissement de contenu numérique gratuit et mondial.',
+        category: 'Layer 1',
+        consensus: 'Delegated Proof of Stake',
+        links: {
+            website: 'https://tron.network',
+            whitepaper: 'https://tron.network/static/doc/white_paper_v_2_0.pdf',
+            github: 'https://github.com/tronprotocol',
+            explorer: 'https://tronscan.org',
+        },
+        networks: [
+            { name: 'mainnet', isMainnet: true, active: true, launched: '2018' },
+        ],
+    },
+    {
+        name: 'Monad',
         symbol: 'MON',
         slug: BlockchainSlug.MONAD,
         color: '#627EEA',
@@ -137,17 +214,21 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
         longDescription: 'Monad est une blockchain Layer 1 compatible EVM qui promet 10 000 transactions par seconde avec une finalité instantanée.',
         category: 'Layer 1',
         consensus: 'Proof of Stake',
-        launched: '2024',
         links: {
-            website: 'monad.xyz',
-            whitepaper: 'https://monad.xyz/whitepaper',
-            github: 'https://github.com/monad-xyz',
-            explorer: 'https://testnet.monad.xyz',
+            website: 'https://monad.xyz/',
+            whitepaper: '',
+            github: 'https://github.com/monad-developers',
+            explorer: 'https://testnet.monadexplorer.com',
+            discord: 'https://discord.gg/monad',
+            docs: 'https://docs.monad.xyz/',
+            twitter: 'https://x.com/monad_xyz',
         },
-        network: 'testnet'
+        networks: [
+            { name: 'Monad Testnet', isMainnet: false, active: true, launched: '2025' },
+        ],
     },
     {
-        name: 'MegaETH Testnet',
+        name: 'MegaETH',
         symbol: 'ETH',
         slug: BlockchainSlug.MEGAETH,
         color: '#FF6B35',
@@ -155,14 +236,181 @@ export const ALL_BLOCKCHAINS: Blockchain[] = [
         longDescription: 'MegaETH est une solution Layer 2 révolutionnaire qui vise 100 000 transactions par seconde tout en restant compatible EVM.',
         category: 'Layer 2',
         consensus: 'Optimistic Rollup',
-        launched: '2024',
         links: {
-            website: 'megaeth.systems',
-            whitepaper: 'https://megaeth.systems/whitepaper',
+            website: 'https://www.megaeth.com/',
+            whitepaper: '',
             github: 'https://github.com/megaeth-labs',
-            explorer: 'https://testnet.megaeth.systems',
+            explorer: 'https://www.megaexplorer.xyz/',
+            twitter: 'https://x.com/megaeth_labs',
+            docs: 'https://docs.megaeth.com/',
+            discord: 'https://discord.gg/megaeth',
         },
-        network: 'testnet'
-    }
+        networks: [
+            { name: 'MegaETH Testnet', isMainnet: false, active: true, launched: '2025' },
+        ],
+    },
+    {
+        name: 'Berachain',
+        symbol: 'BERA',
+        slug: BlockchainSlug.BERACHAIN,
+        color: '#8B4513',
+        description: 'Blockchain EVM avec PoL innovant',
+        longDescription: 'Berachain est une blockchain EVM qui introduit le Proof of Liquidity, alignant les validateurs avec la liquidité DeFi.',
+        category: 'Layer 1',
+        consensus: 'Proof of Liquidity',
+        links: {
+            website: 'https://berachain.com',
+            whitepaper: 'https://docs.berachain.com',
+            github: 'https://github.com/berachain',
+            explorer: 'https://bartio.beratrail.io',
+            discord: 'https://discord.gg/berachain',
+            twitter: 'https://x.com/berachain',
+        },
+        networks: [
+            { name: 'Berachain Testnet', isMainnet: false, active: true, launched: '2024' },
+        ],
+    },
+    {
+        name: 'Sonic',
+        symbol: 'S',
+        slug: BlockchainSlug.SONIC,
+        color: '#1E90FF',
+        description: 'Successeur de Fantom ultra-rapide',
+        longDescription: 'Sonic est la nouvelle blockchain développée par Fantom Foundation, promettant des performances encore supérieures.',
+        category: 'Layer 1',
+        consensus: 'Lachesis 2.0',
+        links: {
+            website: 'https://soniclabs.com',
+            whitepaper: 'https://docs.soniclabs.com',
+            github: 'https://github.com/sonic-chain',
+            explorer: 'https://testnet.sonicscan.org',
+            discord: 'https://discord.gg/soniclabs',
+            twitter: 'https://x.com/SonicLabs',
+        },
+        networks: [
+            { name: 'Sonic Testnet', isMainnet: false, active: true, launched: '2024' },
+        ],
+    },
+    {
+        name: 'Abstract',
+        symbol: 'ABS',
+        slug: BlockchainSlug.ABSTRACT,
+        color: '#9932CC',
+        description: 'Layer 2 axé sur l\'adoption grand public',
+        longDescription: 'Abstract est une solution Layer 2 conçue pour simplifier l\'expérience utilisateur et favoriser l\'adoption mainstream.',
+        category: 'Layer 2',
+        consensus: 'ZK Rollup',
+        links: {
+            website: 'https://abs.xyz',
+            whitepaper: 'https://docs.abs.xyz',
+            github: 'https://github.com/Abstract-Foundation',
+            explorer: 'https://explorer.testnet.abs.xyz',
+            discord: 'https://discord.gg/abstract',
+            twitter: 'https://x.com/AbstractChain',
+        },
+        networks: [
+            { name: 'Abstract Testnet', isMainnet: false, active: true, launched: '2024' },
+        ],
+    },
+
+
+    // NON-EVM
+    {
+        name: 'Solana',
+        symbol: 'SOL',
+        slug: BlockchainSlug.SOLANA,
+        color: '#9945FF',
+        description: 'Blockchain haute performance',
+        longDescription: 'Solana est une blockchain haute performance conçue pour les applications décentralisées à grande échelle.',
+        category: 'Layer 1',
+        consensus: 'Proof of History + Proof of Stake',
+        links: {
+            website: 'https://solana.com',
+            whitepaper: 'https://solana.com/solana-whitepaper.pdf',
+            github: 'https://github.com/solana-labs',
+            explorer: 'https://solscan.io',
+        },
+        networks: [
+            { name: 'Solana', isMainnet: true, active: true, launched: '2020' },
+        ],
+    },
+    {
+        name: 'Bitcoin',
+        symbol: 'BTC',
+        slug: BlockchainSlug.BITCOIN,
+        color: '#F7931A',
+        description: 'La première et plus célèbre cryptomonnaie',
+        longDescription: 'Bitcoin est la première cryptomonnaie décentralisée, créée par Satoshi Nakamoto. Elle sert de réserve de valeur numérique.',
+        category: 'Layer 1',
+        consensus: 'Proof of Work',
+        links: {
+            website: 'https://bitcoin.org',
+            whitepaper: 'https://bitcoin.org/bitcoin.pdf',
+            github: 'https://github.com/bitcoin',
+            explorer: 'https://blockstream.info',
+        },
+        networks: [
+            { name: 'Bitcoin', isMainnet: true, active: true, launched: '2009' },
+        ],
+    },
+    {
+        name: 'Sui',
+        symbol: 'SUI',
+        slug: BlockchainSlug.SUI,
+        color: '#4DA2FF',
+        description: 'Blockchain nouvelle génération by Meta',
+        longDescription: 'Sui est une blockchain Layer 1 développée par d\'ex-ingénieurs Meta, utilisant le langage Move pour des performances optimales.',
+        category: 'Layer 1',
+        consensus: 'Delegated Proof of Stake',
+        links: {
+            website: 'https://sui.io',
+            whitepaper: 'https://github.com/MystenLabs/sui/blob/main/doc/paper/sui.pdf',
+            github: 'https://github.com/MystenLabs/sui',
+            explorer: 'https://suiexplorer.com',
+        },
+        networks: [
+            { name: 'Sui', isMainnet: true, active: true, launched: '2023' },
+        ],
+    },
+    {
+        name: 'TON',
+        symbol: 'TON',
+        slug: BlockchainSlug.TON,
+        color: '#0088CC',
+        description: 'The Open Network by Telegram',
+        longDescription: 'TON est une blockchain ultra-rapide développée par Telegram, conçue pour des millions d\'utilisateurs.',
+        category: 'Layer 1',
+        consensus: 'Proof of Stake',
+        links: {
+            website: 'https://ton.org',
+            whitepaper: 'https://ton.org/whitepaper.pdf',
+            github: 'https://github.com/ton-blockchain',
+            explorer: 'https://tonscan.org',
+        },
+        networks: [
+            { name: 'TON', isMainnet: true, active: true, launched: '2021' },
+        ],
+    },
+    {
+        name: 'Hyperliquid',
+        symbol: 'HYPE',
+        slug: BlockchainSlug.HYPERLIQUID,
+        color: '#00D4AA',
+        description: 'DEX perpétuels ultra-performant',
+        longDescription: 'Hyperliquid est une blockchain spécialisée dans le trading de perpétuels avec une performance et liquidité exceptionnelles.',
+        category: 'Layer 1',
+        consensus: 'HyperBFT',
+        links: {
+            website: 'https://hyperliquid.xyz',
+            whitepaper: 'https://hyperliquid.gitbook.io/hyperliquid-docs',
+            github: 'https://github.com/hyperliquid-dex',
+            explorer: 'https://app.hyperliquid.xyz',
+            discord: 'https://discord.gg/hyperliquid',
+            twitter: 'https://x.com/HyperliquidX',
+        },
+        networks: [
+            { name: 'Hyperliquid Testnet', isMainnet: false, active: true, launched: '2024' },
+        ],
+    },
 ];
 

@@ -1,14 +1,17 @@
 // pages/blockchains/BlockchainDevelopers.tsx
 
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import { useBlockchain } from '../../hooks/useBlockchain'
+import { useBlockchainDevelopperResources } from '../../hooks/useBlockchainDevelopperResource';
 
 
 export default function BlockchainDevelopers() {
-    const { blockchain, loading, slug } = useBlockchain()
+    const { slug } = useParams<{ slug: string }>();
+    const { blockchain, loading: blockchainLoading } = useBlockchain(slug);
+    const { blockchainDevelopperResources, loading } = useBlockchainDevelopperResources(slug);
 
-    if (!blockchain) {
+    if (!blockchainDevelopperResources || !blockchain) {
         return (
             <div className="page">
                 <div className="error-section">
@@ -22,7 +25,7 @@ export default function BlockchainDevelopers() {
         )
     }
 
-    if (loading) {
+    if (blockchainLoading || loading) {
         return (
             <div className="page">
                 <div className="loading-section">
@@ -31,6 +34,8 @@ export default function BlockchainDevelopers() {
             </div>
         )
     }
+
+    const blockchainDevelopperResource = blockchainDevelopperResources[0];
 
     return (
         <div className="page">
@@ -73,22 +78,26 @@ export default function BlockchainDevelopers() {
             <section className="dev-section">
                 <h2>📚 Documentation Officielle</h2>
                 <div className="doc-grid">
-                    <a href={blockchain.documentation.official} target="_blank" rel="noopener noreferrer" className="doc-card">
-                        <h3>Documentation Développeurs</h3>
-                        <p>Guide complet pour développer sur {blockchain.name}</p>
-                        <span className="link-indicator">Voir →</span>
-                    </a>
-                    <a href={blockchain.documentation.whitepaper} target="_blank" rel="noopener noreferrer" className="doc-card">
-                        <h3>Whitepaper</h3>
-                        <p>Document technique fondateur</p>
-                        <span className="link-indicator">Lire →</span>
-                    </a>
-                    {'cookbook' in blockchain.documentation && blockchain.documentation.cookbook && (
-                        <a href={blockchain.documentation.cookbook} target="_blank" rel="noopener noreferrer" className="doc-card">
-                            <h3>Cookbook</h3>
-                            <p>Recettes et exemples pratiques</p>
-                            <span className="link-indicator">Explorer →</span>
-                        </a>
+                    {blockchainDevelopperResource.documentation && (
+                        <>
+                            <a href={blockchainDevelopperResource.documentation.official} target="_blank" rel="noopener noreferrer" className="doc-card">
+                                <h3>Documentation Développeurs</h3>
+                                <p>Guide complet pour développer sur {blockchain.name}</p>
+                                <span className="link-indicator">Voir →</span>
+                            </a>
+                            <a href={blockchainDevelopperResource.documentation.whitepaper} target="_blank" rel="noopener noreferrer" className="doc-card">
+                                <h3>Whitepaper</h3>
+                                <p>Document technique fondateur</p>
+                                <span className="link-indicator">Lire →</span>
+                            </a>
+                            {'cookbook' in blockchainDevelopperResource.documentation && blockchainDevelopperResource.documentation.cookbook && (
+                                <a href={blockchainDevelopperResource.documentation.cookbook} target="_blank" rel="noopener noreferrer" className="doc-card">
+                                    <h3>Cookbook</h3>
+                                    <p>Recettes et exemples pratiques</p>
+                                    <span className="link-indicator">Explorer →</span>
+                                </a>
+                            )}
+                        </>
                     )}
                 </div>
             </section>
@@ -97,7 +106,7 @@ export default function BlockchainDevelopers() {
             <section className="dev-section">
                 <h2>🔧 Outils de Développement</h2>
                 <div className="tools-grid">
-                    {blockchain.tools.map((tool, index) => (
+                    {blockchainDevelopperResource.tools.map((tool, index) => (
                         <div key={index} className="tool-card">
                             <h3>{tool.name}</h3>
                             <p>{tool.description}</p>
@@ -113,7 +122,7 @@ export default function BlockchainDevelopers() {
             <section className="dev-section">
                 <h2>⚡ Frameworks & SDKs</h2>
                 <div className="frameworks-grid">
-                    {blockchain.frameworks.map((framework, index) => (
+                    {blockchainDevelopperResource.frameworks.map((framework, index) => (
                         <div key={index} className="framework-card">
                             <div className="framework-header">
                                 <h3>{framework.name}</h3>
@@ -129,43 +138,27 @@ export default function BlockchainDevelopers() {
 
             {/* Testnet */}
             <section className="dev-section">
-                <h2>🧪 Réseau de Test</h2>
-                <div className="testnet-card">
-                    <h3>{blockchain.testnet.name}</h3>
-                    <div className="testnet-info">
-                        <div className="testnet-links">
-                            <a href={blockchain.testnet.faucet} target="_blank" rel="noopener noreferrer" className="testnet-btn">
-                                💧 Faucet
-                            </a>
-                            <a href={blockchain.testnet.explorer} target="_blank" rel="noopener noreferrer" className="testnet-btn">
-                                🔍 Explorer
-                            </a>
-                        </div>
-                        <div className="rpc-info">
-                            <span className="rpc-label">RPC Endpoint:</span>
-                            <code className="rpc-url">{blockchain.testnet.rpc}</code>
+                <h2>🧪 Réseaux de Test</h2>
+
+                {blockchainDevelopperResource.testnet.map(testnet => (
+                    <div className="testnet-card">
+                        <h3>{testnet.name}</h3>
+                        <div className="testnet-info">
+                            <div className="testnet-links">
+                                <a href={testnet.faucet} target="_blank" rel="noopener noreferrer" className="testnet-btn">
+                                    💧 Faucet
+                                </a>
+                                <a href={testnet.explorer} target="_blank" rel="noopener noreferrer" className="testnet-btn">
+                                    🔍 Explorer
+                                </a>
+                            </div>
+                            <div className="rpc-info">
+                                <span className="rpc-label">RPC Endpoint:</span>
+                                <code className="rpc-url">{testnet.rpc}</code>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            {/* Tutoriels */}
-            <section className="dev-section">
-                <h2>🎓 Tutoriels Recommandés</h2>
-                <div className="tutorials-grid">
-                    {blockchain.tutorials.map((tutorial, index) => (
-                        <div key={index} className="tutorial-card">
-                            <h3>{tutorial.title}</h3>
-                            <div className="tutorial-meta">
-                                <span className={`difficulty-badge ${tutorial.difficulty.toLowerCase()}`}>
-                                    {tutorial.difficulty}
-                                </span>
-                                <span className="duration">⏱️ {tutorial.duration}</span>
-                            </div>
-                            <button className="action-btn primary">Commencer</button>
-                        </div>
-                    ))}
-                </div>
+                ))}
             </section>
 
             {/* Communauté */}

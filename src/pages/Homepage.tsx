@@ -3,26 +3,31 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
-import { getBlockchainNameBySlug, getHomepageBlockchains, getHomepageDapps } from '../apis'
+import { getHomepageBlockchains, getHomepageDapps } from '../api/apis'
 
 import type { Blockchain, BlockchainMetrics } from '../types/blockchains_types'
 import type { Dapp, DappMetrics } from '../types/dapps_types'
 
+import { useBlockchains } from '../hooks/useBlockchain'
+import type { BlockchainSlug } from '../data/blockchains_data'
+import { useDappMetrics } from '../hooks/useDappMetrics'
+
 
 export default function Homepage() {
-    const [blockchains, setBlockchains] = useState<Blockchain[]>([])
-    const [dapps, setDapps] = useState<Dapp[]>([])
-    const [loading, setLoading] = useState(true)
+    const [blockchains, setBlockchains] = useState<Blockchain[]>([]);
+    const [dapps, setDapps] = useState<Dapp[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadData = async () => {
             try {
-                const [blockchainsData, dappsData] = await Promise.all([
+                const [blockchains, dapps] = await Promise.all([
                     getHomepageBlockchains(),
                     getHomepageDapps()
-                ])
-                setBlockchains(blockchainsData)
-                setDapps(dappsData)
+                ]);
+
+                setBlockchains(blockchains);
+                setDapps(dapps);
 
             } catch (error) {
                 console.error('Erreur lors du chargement des données:', error)
@@ -232,6 +237,13 @@ interface DappsSectionProps {
 
 
 function DappsSection({ dapps }: DappsSectionProps) {
+    const { blockchains } = useBlockchains();
+
+    const getBlockchainNameBySlug = (slug: BlockchainSlug) => {
+        const blockchain = blockchains.find(blockchain => blockchain.slug == slug);
+        return blockchain?.name || slug;
+    }
+
     return (
         <section className="data-section">
             <div className="section-header">
@@ -253,7 +265,8 @@ function DappsSection({ dapps }: DappsSectionProps) {
                     </thead>
                     <tbody>
                         {dapps.map((dapp) => {
-                            const dappMetrics: DappMetrics | null = null as DappMetrics | null;
+                            const { dappMetrics } = useDappMetrics(dapp.slug);
+                            const dappMetric = dappMetrics[0];
 
                             return (
                                 <tr key={dapp.slug}>
@@ -278,8 +291,8 @@ function DappsSection({ dapps }: DappsSectionProps) {
                                             ))}
                                         </div>
                                     </td>
-                                    <td className="metric-value">{dappMetrics ? dappMetrics.tvl : 'n'}</td>
-                                    <td className="metric-value">{dappMetrics ? dappMetrics.volume24h : 'n'}</td>
+                                    <td className="metric-value">{dappMetric ? dappMetric.tvl : 'n'}</td>
+                                    <td className="metric-value">{dappMetric ? dappMetric.volume24h : 'n'}</td>
                                     <td>
                                         <Link
                                             to={`/dapps/${dapp.slug}`}

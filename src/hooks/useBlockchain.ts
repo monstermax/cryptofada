@@ -1,22 +1,50 @@
 // hooks/useBlockchain.ts
 
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react";
 
-import { getBlockchains } from "../apis"
+import { getBlockchains } from "../api/apis";
 
-import type { Blockchain } from "../types/blockchains_types"
+import type { Blockchain } from "../types/blockchains_types";
 
 
-export function useBlockchain() {
-    const [blockchain, setBlockchain] = useState<Blockchain | null>(null)
-    const [loading, setLoading] = useState(true)
-    const { slug } = useParams<{ slug: string }>()
+export function useBlockchains() {
+    const [blockchains, setBlockchains] = useState<Blockchain[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadData = async () => {
             try {
-                const blockchainsData = await getBlockchains()
+                const blockchains = await getBlockchains();
+                setBlockchains(blockchains)
+
+            } catch (error) {
+                console.error('Erreur lors du chargement des blockchains:', error)
+
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        loadData()
+    }, [])
+
+    return {
+        blockchains,
+        setBlockchains,
+        loading,
+    }
+}
+
+
+export function useBlockchain(slug: string | undefined, blockchainsData?: Blockchain[]) {
+    const [blockchain, setBlockchain] = useState<Blockchain | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                blockchainsData = blockchainsData || await getBlockchains();
+
                 const blockchain = blockchainsData.find(chainData => chainData.slug === slug)
                 setBlockchain(blockchain ?? null)
 
@@ -34,7 +62,9 @@ export function useBlockchain() {
     return {
         blockchain,
         setBlockchain,
-        slug,
         loading,
     }
 }
+
+
+

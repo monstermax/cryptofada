@@ -1,41 +1,23 @@
 // pages/Testnets.tsx
 
-import { useState, useEffect, type FC } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, type FC } from 'react';
+import { Link } from 'react-router-dom';
 
-import { getTestnets, getTestnetGuides, blockchainHasAirdrop } from '../apis'
+import { blockchainHasAirdrop } from '../api/apis';
+import { useBlockchainsAirdrops } from '../hooks/useBlockchainAirdrop';
+import { useBlockchains } from '../hooks/useBlockchain';
 
-import type { Blockchain, BlockchainMetrics } from '../types/blockchains_types'
-import type { TestnetGuide } from '../types/types'
+import type { Blockchain, BlockchainAirdrop, BlockchainMetrics } from '../types/blockchains_types';
+
 
 
 export default function Testnets() {
-    const [testnets, setTestnets] = useState<Blockchain[]>([])
-    const [guides, setGuides] = useState<TestnetGuide[]>([])
-    const [loading, setLoading] = useState(true)
+    const { blockchains, loading: blockchainsLoading } = useBlockchains();
+    const { blockchainsAirdrops, loading } = useBlockchainsAirdrops();
 
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const [testnetsData, guidesData] = await Promise.all([
-                    getTestnets(),
-                    getTestnetGuides()
-                ])
-                setTestnets(testnetsData)
-                setGuides(guidesData)
+    const blockchainsHavingTestnets = blockchains.filter(b => b.networks.some(network => !network.isMainnet));
 
-            } catch (error) {
-                console.error('Erreur lors du chargement des testnets:', error)
-
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        loadData()
-    }, [])
-
-    if (loading) {
+    if (blockchainsLoading || loading) {
         return (
             <div className="page">
                 <div className="loading-section">
@@ -66,16 +48,16 @@ export default function Testnets() {
                 </div>
             </div>
 
-            {/* Section Guides d'Airdrop */}
-            <AirdropGuides
-                testnets={testnets}
-                guides={guides}
-                />
-
             {/* Section Liste des Testnets */}
             <TestnetsList
-                testnets={testnets}
-                guides={guides}
+                blockchainsHavingTestnets={blockchainsHavingTestnets}
+                blockchainsAirdrops={blockchainsAirdrops}
+                />
+
+            {/* Section Guides d'Airdrop */}
+            <AirdropGuides
+                testnets={blockchainsHavingTestnets}
+                blockchainsAirdrops={blockchainsAirdrops}
                 />
 
             {/* Section Conseils */}
@@ -87,12 +69,12 @@ export default function Testnets() {
 
 
 type TestnetsListProps = {
-    testnets: Blockchain[],
-    guides: TestnetGuide[],
+    blockchainsHavingTestnets: Blockchain[],
+    blockchainsAirdrops: BlockchainAirdrop[],
 };
 
 
-const TestnetsList: FC<TestnetsListProps> = ({ testnets, guides }) => {
+const TestnetsList: FC<TestnetsListProps> = ({ blockchainsHavingTestnets, blockchainsAirdrops }) => {
     return (
         <>
             {/* Section Liste des Testnets */}
@@ -113,27 +95,28 @@ const TestnetsList: FC<TestnetsListProps> = ({ testnets, guides }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {testnets.map((testnet) => {
-                                const hasGuide = guides.some(g => g.blockchain === testnet.slug);
+                            {blockchainsHavingTestnets.map((blockchain) => {
+                                const hasGuide = blockchainsAirdrops.some(g => g.blockchain === blockchain.slug);
                                 const blockchainMetrics: BlockchainMetrics | null = null as BlockchainMetrics | null;
+                                const hasAirdrop = blockchainHasAirdrop(blockchain.slug);
 
                                 return (
-                                    <tr key={testnet.slug}>
+                                    <tr key={blockchain.slug}>
                                         <td>
                                             <div className="blockchain-cell">
                                                 <div
                                                     className="blockchain-dot"
-                                                    style={{ backgroundColor: testnet.color }}
+                                                    style={{ backgroundColor: blockchain.color }}
                                                 ></div>
                                                 <div>
-                                                    <div className="blockchain-name">{testnet.name}</div>
-                                                    <div className="blockchain-symbol">{testnet.symbol}</div>
+                                                    <div className="blockchain-name">{blockchain.name}</div>
+                                                    <div className="blockchain-symbol">{blockchain.symbol}</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <span className={`category-badge ${testnet.category.toLowerCase().replace(' ', '-')}`}>
-                                                {testnet.category}
+                                            <span className={`category-badge ${blockchain.category.toLowerCase().replace(' ', '-')}`}>
+                                                {blockchain.category}
                                             </span>
                                         </td>
                                         <td>
@@ -157,15 +140,28 @@ const TestnetsList: FC<TestnetsListProps> = ({ testnets, guides }) => {
                                         <td>
                                             <div className="action-buttons">
                                                 <Link
-                                                    to={`/blockchain/${testnet.slug}`}
+                                                    to={`/blockchain/${blockchain.slug}`}
                                                     className="action-btn primary"
                                                 >
                                                     Explorer
                                                 </Link>
+
                                                 {hasGuide && (
-                                                    <button className="action-btn secondary guide-btn">
-                                                        📋 Guide
-                                                    </button>
+                                                    <Link
+                                                        to={`/blockchain/${blockchain.slug}/tutos`}
+                                                        className="action-btn secondary guide-btn"
+                                                    >
+                                                        Guide
+                                                    </Link>
+                                                )}
+
+                                                {hasAirdrop && (
+                                                    <Link
+                                                        to={`/blockchain/${blockchain.slug}/airdrop`}
+                                                        className="action-btn secondary guide-btn"
+                                                    >
+                                                        Airdrop
+                                                    </Link>
                                                 )}
                                             </div>
                                         </td>
@@ -183,10 +179,10 @@ const TestnetsList: FC<TestnetsListProps> = ({ testnets, guides }) => {
 
 type AirdropGuidesProps = {
     testnets: Blockchain[],
-    guides: TestnetGuide[],
+    blockchainsAirdrops: BlockchainAirdrop[],
 };
 
-const AirdropGuides: FC<AirdropGuidesProps> = ({ testnets, guides }) => {
+const AirdropGuides: FC<AirdropGuidesProps> = ({ testnets, blockchainsAirdrops }) => {
 
     return (
         <>
@@ -198,7 +194,7 @@ const AirdropGuides: FC<AirdropGuidesProps> = ({ testnets, guides }) => {
                 </div>
 
                 <div className="guides-grid">
-                    {guides.map((guide) => {
+                    {blockchainsAirdrops.map((guide) => {
                         const blockchain = testnets.find(t => t.slug === guide.blockchain)
                         return (
                             <div key={guide.blockchain} className="guide-card">

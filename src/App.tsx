@@ -1,21 +1,50 @@
 // App.tsx
 
-import { BrowserRouter as Router, Routes, Route, Link, Outlet, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, Outlet, useLocation } from 'react-router-dom';
 
-// Import des composants de pages existants
-import Homepage from './pages/Homepage'
-import Blockchains from './pages/blockchains/Blockchains'
-import Dapps from './pages/dapps/Dapps'
-import Testnets from './pages/Testnets'
-import Developers from './pages/Developers'
+import Homepage from './pages/Homepage';
+import Blockchains from './pages/blockchains/Blockchains';
+import Dapps from './pages/dapps/Dapps';
+import Testnets from './pages/Testnets';
+import Developers from './pages/Developers';
+import BlockchainDetail from './pages/blockchains/BlockchainDetail';
+import BlockchainDapps from './pages/blockchains/BlockchainDapps';
+import BlockchainDevelopers from './pages/blockchains/BlockchainDevelopers';
+import DappDetail from './pages/dapps/DappDetail';
 
-// Import des nouveaux composants pour les routes dynamiques
-import BlockchainDetail from './pages/blockchains/BlockchainDetail'
-import BlockchainDapps from './pages/blockchains/BlockchainDapps'
-import BlockchainDevelopers from './pages/blockchains/BlockchainDevelopers'
-import DappDetail from './pages/dapps/DappDetail'
+import './App.css';
 
-import './App.css'
+
+function App() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Layout />}>
+                    {/* Routes principales */}
+                    <Route index element={<Homepage />} />
+                    <Route path="blockchains" element={<Blockchains />} />
+                    <Route path="dapps" element={<Dapps />} />
+                    <Route path="testnets" element={<Testnets />} />
+                    <Route path="developers" element={<Developers />} />
+
+                    {/* Routes dynamiques pour les blockchains */}
+                    <Route path="blockchain/:slug" element={<BlockchainDetail />} />
+                    <Route path="blockchain/:slug/tutos" element={<BlockchainTutos />} />
+                    <Route path="blockchain/:slug/airdrops" element={<BlockchainAirdrops />} />
+                    <Route path="blockchain/:slug/dapps" element={<BlockchainDapps />} />
+                    <Route path="blockchain/:slug/developers" element={<BlockchainDevelopers />} />
+
+                    {/* Route dynamique pour les dApps */}
+                    <Route path="dapps/:slug" element={<DappDetail />} />
+                    <Route path="dapps/:slug/tutos" element={<PageSoon />} />
+                    <Route path="dapps/:slug/airdrops" element={<PageSoon />} />
+                    <Route path="dapps/:slug/blockchains" element={<PageSoon />} />
+                    <Route path="dapps/:slug/developers" element={<PageSoon />} />
+                </Route>
+            </Routes>
+        </Router>
+    )
+}
 
 
 // Composant Layout
@@ -57,38 +86,6 @@ function Layout() {
                 <p>&copy; 2025 CryptoFada - Votre porte d'entrée vers l'écosystème blockchain</p>
             </footer>
         </div>
-    )
-}
-
-
-function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    {/* Routes principales */}
-                    <Route index element={<Homepage />} />
-                    <Route path="blockchains" element={<Blockchains />} />
-                    <Route path="dapps" element={<Dapps />} />
-                    <Route path="testnets" element={<Testnets />} />
-                    <Route path="developers" element={<Developers />} />
-
-                    {/* Routes dynamiques pour les blockchains */}
-                    <Route path="blockchain/:slug" element={<BlockchainDetail />} />
-                    <Route path="blockchain/:slug/tutos" element={<BlockchainTutos />} />
-                    <Route path="blockchain/:slug/airdrops" element={<BlockchainAirdrops />} />
-                    <Route path="blockchain/:slug/dapps" element={<BlockchainDapps />} />
-                    <Route path="blockchain/:slug/developers" element={<BlockchainDevelopers />} />
-
-                    {/* Route dynamique pour les dApps */}
-                    <Route path="dapps/:slug" element={<DappDetail />} />
-                    <Route path="dapps/:slug/tutos" element={<PageSoon />} />
-                    <Route path="dapps/:slug/airdrops" element={<PageSoon />} />
-                    <Route path="dapps/:slug/blockchains" element={<PageSoon />} />
-                    <Route path="dapps/:slug/developers" element={<PageSoon />} />
-                </Route>
-            </Routes>
-        </Router>
     )
 }
 
